@@ -1,0 +1,142 @@
+/* ============================ Shell ============================ */
+.shell { display: flex; height: 100vh; overflow: hidden; background: var(--bg-primary); }
+.shell__main { flex: 1 1 auto; min-width: 0; overflow: auto; background: var(--bg-primary); }
+.shell__content { padding: var(--spacing-4xl); }
+
+/* ============================ Sidebar ============================ */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  height: 100%;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-secondary);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: visible;
+  transition: width 0.2s ease;
+}
+.sidebar--collapsed { width: var(--sidebar-w-collapsed); }
+
+.sidebar__top { display: flex; flex-direction: column; gap: var(--spacing-xl); padding-top: var(--spacing-4xl); }
+
+/* Header */
+.sidebar__header {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 32px; padding: 0 var(--spacing-3xl);
+}
+.sidebar--collapsed .sidebar__header { justify-content: center; padding: 0; }
+.sidebar__logo { display: inline-flex; }
+.sidebar__logo svg { display: block; height: 32px; width: auto; }
+
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer; padding: 0;
+  color: var(--fg-quinary); border-radius: var(--radius-sm);
+}
+.icon-btn:hover { color: var(--fg-secondary); }
+.sidebar__toggle { width: 28px; height: 28px; }
+.sidebar__toggle:hover { background: var(--bg-active); }
+
+/* Search */
+.sidebar__search-wrap { padding: 0 var(--spacing-3xl); }
+.sidebar--collapsed .sidebar__search-wrap { padding: 0; display: flex; justify-content: center; }
+.sidebar__search-icon { width: 40px; height: 40px; color: var(--fg-quaternary); }
+.sidebar__search-icon:hover { background: var(--bg-active); }
+
+.field {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  box-shadow: var(--shadow-xs);
+}
+.field:focus-within { border-color: var(--brand-200); box-shadow: 0 0 0 3px rgba(51, 136, 255, 0.18), var(--shadow-xs); }
+.field__icon { color: var(--fg-quaternary); }
+.field__input {
+  flex: 1 1 0; min-width: 0; border: none; outline: none; background: transparent;
+  color: var(--text-primary-2); padding: 0;
+}
+.field__input::placeholder { color: var(--text-placeholder); }
+
+.sidebar__divider { height: 1px; background: var(--border-secondary); margin: 0 var(--spacing-xl); }
+
+/* Navigation */
+.sidebar__nav { display: flex; flex-direction: column; gap: var(--spacing-md); padding: 0 var(--spacing-xl); }
+.sidebar--collapsed .sidebar__nav { align-items: center; }
+.nav-section { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.sidebar--collapsed .nav-section { align-items: center; }
+.nav-section__title {
+  height: 40px; display: flex; align-items: center;
+  padding: 12px 12px 4px; color: var(--text-quaternary);
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: var(--spacing-lg);
+  height: 40px; padding: 8px 12px; width: 100%;
+  border: none; background: none; cursor: pointer; text-align: left;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--bg-active); }
+.nav-item--active { background: var(--bg-active); color: var(--text-secondary-hover); }
+.nav-item__icon { color: inherit; }
+.nav-item__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar--collapsed .nav-item { width: 40px; justify-content: center; padding: 8px; gap: 0; }
+
+/* Footer */
+.sidebar__footer { position: relative; padding: 0 var(--spacing-xl) var(--spacing-4xl); }
+.sidebar--collapsed .sidebar__footer { display: flex; justify-content: center; }
+.nav-item--button { font: inherit; }
+
+/* ============================ User menu ============================ */
+.menu {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+.menu--user {
+  position: absolute; left: var(--spacing-md); bottom: 80px;
+  width: 240px; padding: 4px 0; z-index: 50;
+}
+.menu__header { display: flex; align-items: center; justify-content: center; gap: var(--spacing-md); padding: 10px 16px; }
+.menu__header .icon-box { color: var(--fg-secondary); }
+.menu__header-name { color: var(--text-secondary); }
+
+.menu__row { position: relative; padding: 1px var(--spacing-sm); }
+.menu-item {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  width: 100%; padding: 9px 10px;
+  border: none; background: none; cursor: pointer; text-align: left;
+  border-radius: var(--radius-xs);
+  color: var(--text-primary-2);
+}
+.menu-item:hover { background: var(--bg-active); }
+.menu-item__icon { color: var(--fg-secondary); }
+.menu-item__label { flex: 1 1 0; min-width: 0; }
+.menu-item__chevron, .menu-item__check { margin-left: auto; color: var(--fg-secondary); }
+.menu-item__check { color: var(--fg-brand); }
+
+.menu__divider { height: 1px; background: var(--border-secondary); margin: 4px 0; }
+
+/* Language submenu */
+.menu--sub { position: absolute; left: calc(100% + 8px); top: -4px; width: 220px; padding: 4px var(--spacing-sm); z-index: 60; }
+.menu-item--sub { border-radius: var(--radius-xs); }
+
+/* ============================ Tooltip ============================ */
+.tt-wrap { position: relative; display: inline-flex; }
+.tt {
+  position: absolute; z-index: 70;
+  background: var(--bg-tertiary); color: var(--text-primary-2);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+  white-space: nowrap; pointer-events: none;
+}
+.tt--right { left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.tt--right::before {
+  content: ''; position: absolute; right: 100%; top: 50%; transform: translateY(-50%);
+  border: 5px solid transparent; border-right-color: var(--bg-tertiary);
+}

@@ -1,0 +1,76 @@
+/* MyWorkDrive design tokens — extracted verbatim from the Figma UI kit.
+   Names mirror the Figma variable groups so the mapping stays traceable. */
+:root {
+  /* ---- Color · Text ---- */
+  --text-primary: #101828;        /* Colors/Text/text-primary (900) — page headings */
+  --text-primary-2: #1a1a1e;      /* text/text-primary (900) — body, table, toggle */
+  --text-secondary: #344054;      /* Colors/Text/text-secondary (700) */
+  --text-secondary-hover: #182230;/* Colors/Text/text-secondary_hover */
+  --text-tertiary: #475467;       /* Colors/Text/text-tertiary (600) */
+  --text-tertiary-2: #51525c;     /* text/text-tertiary (600) */
+  --text-quaternary: #70707b;     /* text/text-quaternary (500) */
+  --text-placeholder: #667085;    /* Colors/Text/text-placeholder */
+  --text-brand-link: #2461b5;     /* text/text-brand-links */
+  --text-white: #ffffff;
+
+  /* ---- Color · Background ---- */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;        /* table header, page canvas panels */
+  --bg-tertiary: #f4f4f5;         /* feature badge, toggle-off track */
+  --bg-active: #fafafa;           /* nav active, dropdown-item hover */
+  --bg-primary-hover: #f9fafb;    /* pagination active page */
+  --bg-error-secondary: #fee4e2;  /* featured icon halo */
+  --bg-error-solid: #d92d20;
+  --bg-brand-solid: #3388ff;
+  --bg-overlay: #131316;
+
+  /* ---- Color · Border ---- */
+  --border-primary: #d0d5dd;      /* Colors/Border/border-primary — inputs */
+  --border-primary-2: #d1d1d6;    /* border/border-primary — controls, checkbox */
+  --border-secondary: #eaecf0;    /* Colors/Border/border-secondary — table, sidebar */
+  --border-card: #e4e4e7;         /* border/border-secondary — cards, menus */
+  --border-tertiary: #f4f4f5;     /* button outline */
+
+  /* ---- Color · Foreground (icons) ---- */
+  --fg-brand: #3388ff;
+  --fg-secondary: #3f3f46;
+  --fg-tertiary: #51525c;
+  --fg-quaternary: #70707b;
+  --fg-quinary: #a0a0ab;
+  --fg-error: #d92d20;
+  --fg-warning: #dc6803;
+  --brand-200: #a1c8ff;
+
+  /* ---- Spacing ---- */
+  --spacing-none: 0px;
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 6px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-2xl: 20px;
+  --spacing-3xl: 24px;
+  --spacing-4xl: 32px;
+
+  /* ---- Radius ---- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  --shadow-sm: 0px 1px 2px 0px rgba(16, 24, 40, 0.06), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
+  --shadow-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --shadow-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+
+  /* ---- Typography ---- */
+  --font-sans: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --font-data: "Inter", var(--font-sans); /* table cell values use Inter in the design */
+
+  /* Layout */
+  --sidebar-w: 260px;
+  --sidebar-w-collapsed: 72px;
+}
