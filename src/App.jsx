@@ -2,7 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './layout/AppShell.jsx';
 import SharesPage from './pages/SharesPage.jsx';
+import AddSharePage from './pages/AddSharePage.jsx';
 import Placeholder from './pages/Placeholder.jsx';
+import { SharesProvider } from './store/SharesContext.jsx';
 
 // Only the Shares screen is designed so far. Other areas are real routes that
 // render a neutral placeholder until their designs are provided.
@@ -18,15 +20,18 @@ const PLACEHOLDERS = [
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<AppShell />}>
-        <Route index element={<Navigate to="/shares" replace />} />
-        <Route path="/shares" element={<SharesPage />} />
-        {PLACEHOLDERS.map((p) => (
-          <Route key={p.path} path={`/${p.path}`} element={<Placeholder title={p.title} subtitle={p.subtitle} />} />
-        ))}
-        <Route path="*" element={<Navigate to="/shares" replace />} />
-      </Route>
-    </Routes>
+    <SharesProvider>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route index element={<Navigate to="/shares" replace />} />
+          <Route path="/shares" element={<SharesPage />} />
+          <Route path="/shares/new" element={<AddSharePage />} />
+          {PLACEHOLDERS.map((p) => (
+            <Route key={p.path} path={`/${p.path}`} element={<Placeholder title={p.title} subtitle={p.subtitle} />} />
+          ))}
+          <Route path="*" element={<Navigate to="/shares" replace />} />
+        </Route>
+      </Routes>
+    </SharesProvider>
   );
 }

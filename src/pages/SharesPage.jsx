@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { SHARES, STORAGE_LABELS } from '../data/shares.js';
+import { useNavigate } from 'react-router-dom';
+import { STORAGE_LABELS } from '../data/shares.js';
+import { useShares } from '../store/SharesContext.jsx';
 import {
   IconSearch, IconSortDown, IconEdit, IconCheckCircle,
   IconErrorCircle, IconWarning, IconGlobe, IconLockOpen, IconArrowDownload, IconDocEdit,
@@ -53,6 +55,8 @@ function TruncCell({ text, more }) {
 }
 
 export default function SharesPage() {
+  const navigate = useNavigate();
+  const { shares } = useShares();
   const [driveLetters, setDriveLetters] = useState(false);
   const [query, setQuery] = useState('');
   // null = design's natural order; 'asc' / 'desc' after the user sorts by Name.
@@ -62,14 +66,14 @@ export default function SharesPage() {
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let list = SHARES.filter((s) => !q || s.name.toLowerCase().includes(q));
+    let list = shares.filter((s) => !q || s.name.toLowerCase().includes(q));
     if (sortDir) {
       list = [...list].sort((a, b) =>
         sortDir === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
       );
     }
     return list;
-  }, [query, sortDir]);
+  }, [shares, query, sortDir]);
 
   const allChecked = rows.length > 0 && rows.every((r) => selected.has(r.id));
   const someChecked = rows.some((r) => selected.has(r.id));
@@ -99,7 +103,7 @@ export default function SharesPage() {
           </p>
         </div>
         <div className="page-header__actions">
-          <button type="button" className="btn btn--primary">Add new share</button>
+          <button type="button" className="btn btn--primary" onClick={() => navigate('/shares/new')}>Add new share</button>
         </div>
       </header>
 

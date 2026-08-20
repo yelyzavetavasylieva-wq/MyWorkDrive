@@ -1,14 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
 import LogoutModal from './LogoutModal.jsx';
+import LeaveWizardModal from './LeaveWizardModal.jsx';
 
 export default function AppShell() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [pendingNav, setPendingNav] = useState(null); // {path,label} when leaving the wizard
   const userBtnRef = useRef(null);
   const menuRef = useRef(null);
+
+  const inWizard = location.pathname === '/shares/new';
 
   // Close the user menu on outside click or Escape.
   useEffect(() => {
@@ -35,6 +41,8 @@ export default function AppShell() {
         userBtnRef={userBtnRef}
         menuRef={menuRef}
         onLogout={() => { setUserMenuOpen(false); setModalOpen(true); }}
+        guardActive={inWizard}
+        onGuardedNav={(path, label) => setPendingNav({ path, label })}
       />
 
       <main className="shell__main">
@@ -47,6 +55,13 @@ export default function AppShell() {
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         onConfirm={() => setModalOpen(false)}
+      />
+
+      <LeaveWizardModal
+        open={!!pendingNav}
+        targetLabel={pendingNav?.label}
+        onStay={() => setPendingNav(null)}
+        onLeave={() => { const to = pendingNav.path; setPendingNav(null); navigate(to); }}
       />
     </div>
   );

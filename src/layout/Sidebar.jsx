@@ -30,9 +30,13 @@ const NAV = [
   },
 ];
 
-function NavItem({ to, label, Icon, collapsed }) {
+function NavItem({ to, label, Icon, collapsed, guardActive, onGuardedNav }) {
   const link = (
-    <NavLink to={to} className={({ isActive }) => 'nav-item' + (isActive ? ' nav-item--active' : '')}>
+    <NavLink
+      to={to}
+      className={({ isActive }) => 'nav-item' + (isActive ? ' nav-item--active' : '')}
+      onClickCapture={guardActive ? (e) => { e.preventDefault(); e.stopPropagation(); onGuardedNav(to, label); } : undefined}
+    >
       <span className="icon-box icon-24 nav-item__icon"><Icon /></span>
       {!collapsed && <span className="nav-item__label t-md-semibold">{label}</span>}
     </NavLink>
@@ -40,7 +44,7 @@ function NavItem({ to, label, Icon, collapsed }) {
   return collapsed ? <Tooltip label={label}>{link}</Tooltip> : link;
 }
 
-export default function Sidebar({ collapsed, onToggle, onOpenUserMenu, userMenuOpen, userBtnRef, menuRef, onLogout }) {
+export default function Sidebar({ collapsed, onToggle, onOpenUserMenu, userMenuOpen, userBtnRef, menuRef, onLogout, guardActive, onGuardedNav }) {
   return (
     <aside className={'sidebar' + (collapsed ? ' sidebar--collapsed' : '')}>
       <div className="sidebar__top">
@@ -86,7 +90,7 @@ export default function Sidebar({ collapsed, onToggle, onOpenUserMenu, userMenuO
             <div className="nav-section" key={section.title}>
               {!collapsed && <div className="nav-section__title t-md-regular">{section.title}</div>}
               {section.items.map((it) => (
-                <NavItem key={it.to} {...it} collapsed={collapsed} />
+                <NavItem key={it.to} {...it} collapsed={collapsed} guardActive={guardActive} onGuardedNav={onGuardedNav} />
               ))}
             </div>
           ))}

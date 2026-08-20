@@ -22,6 +22,22 @@ standalone project, unrelated to any other prototype in this account.
   status/feature/storage iconography, truncation with "More", pagination.
 - Search filter and the "Enable drive letter assignment" toggle, which reveals
   the Drive Letter column exactly as the toggle's description states.
+- **Add new share** — a full 6-step wizard at `/shares/new` (route replaces the
+  main content, per the design):
+  1. Storage type — accordion of provider categories (SMB, OneDrive, SharePoint,
+     Azure Blob, Azure Files, S3) with radio selection.
+  2. Storage settings — required Path field.
+  3. Share details — Name + Drive-letter select.
+  4. Features — Download / Office online editing / Public sharing toggles.
+  5. Users & Groups — permission matrix (Web/Mapped/Mobile/Download/Public
+     sharing/Office Online edit + disabled Guest access), populated via the
+     two-pane "Add Users & Groups" modal (searchable directory, All/Users/Groups
+     filter, assign/remove).
+  6. Review & Confirm — per-section summaries with Edit links and a check/✗
+     permission matrix.
+  A completed wizard creates the share and it appears at the top of the Shares
+  table (in-memory `SharesContext`). Navigating away mid-wizard via the sidebar
+  raises the "Leave wizard?" confirmation.
 
 ## Design fidelity
 
