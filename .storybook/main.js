@@ -13,6 +13,7 @@ const config = {
     "@storybook/addon-docs",
     "@storybook/addon-mcp"
   ],
-  "framework": "@storybook/react-vite"
+  "framework": "@storybook/react-vite",
+  "core": { "disableTelemetry": true }
 };
 export default config;
