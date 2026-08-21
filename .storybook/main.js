@@ -14,6 +14,12 @@ const config = {
     "@storybook/addon-mcp"
   ],
   "framework": "@storybook/react-vite",
-  "core": { "disableTelemetry": true }
+  "core": { "disableTelemetry": true },
+  // Allow Storybook's Vite preview to be served through public dev tunnels.
+  async viteFinal(config) {
+    config.server = config.server || {};
+    config.server.allowedHosts = ['.trycloudflare.com', '.loca.lt', '.ngrok-free.app', '.ngrok.io'];
+    return config;
+  },
 };
 export default config;
