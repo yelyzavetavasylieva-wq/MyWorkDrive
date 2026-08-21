@@ -38,13 +38,15 @@ export default function StepStorageType({ value, onChange }) {
                     const selected = value === p.key;
                     return (
                       <label className={'provider-card' + (selected ? ' is-selected' : '')} key={p.key}>
-                        <input
-                          type="radio"
-                          name="storage-provider"
-                          className="radio"
-                          checked={selected}
-                          onChange={() => onChange(p.key)}
-                        />
+                        <span className="control-box">
+                          <input
+                            type="radio"
+                            name="storage-provider"
+                            className="radio"
+                            checked={selected}
+                            onChange={() => onChange(p.key)}
+                          />
+                        </span>
                         <span className="provider-card__body">
                           <span className="provider-card__title">
                             <span className="icon-box icon-20"><Logo /></span>
