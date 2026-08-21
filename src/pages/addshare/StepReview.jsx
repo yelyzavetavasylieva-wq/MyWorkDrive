@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { findProvider, PERMISSION_COLUMNS } from '../../data/wizard.js';
+import { findProvider, PERMISSION_COLUMNS, settingsFieldsFor } from '../../data/wizard.js';
 import { IconEdit, IconSortDown } from '../../ui/icons.jsx';
 import { IconCheckDot, IconXDot, IconUsersGroup, IconUserSingle } from '../../ui/wizard-icons.jsx';
 import { LogoS3, LogoSMB, LogoOneDrive, LogoAzureBlob, LogoSharePoint, LogoAzureFiles } from '../../ui/logos.jsx';
@@ -40,6 +40,14 @@ export default function StepReview({ state, onEdit }) {
   const Logo = provider ? LOGOS[provider.logo] : null;
   const en = (b) => (b ? 'Enabled' : 'Disabled');
 
+  const settingsRows = settingsFieldsFor(state.provider).map((f) => {
+    const raw = String((state.settings && state.settings[f.key]) || '');
+    const value = raw
+      ? (f.type === 'password' ? '••••••••' : raw)
+      : <span className="kv-empty">—</span>;
+    return [f.label, value];
+  });
+
   return (
     <div className="wz-step">
       <div className="wz-step__head">
@@ -56,7 +64,7 @@ export default function StepReview({ state, onEdit }) {
         </Section>
 
         <Section index="2" title="Storage settings" onEdit={() => onEdit(1)}>
-          <KVTable rows={[['Path', state.path]]} />
+          <KVTable rows={settingsRows} />
         </Section>
 
         <Section index="3" title="Share details" onEdit={() => onEdit(2)}>

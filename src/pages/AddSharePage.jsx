@@ -7,7 +7,7 @@ import StepShareDetails from './addshare/StepShareDetails.jsx';
 import StepFeatures from './addshare/StepFeatures.jsx';
 import StepUsers from './addshare/StepUsers.jsx';
 import StepReview from './addshare/StepReview.jsx';
-import { findProvider } from '../data/wizard.js';
+import { findProvider, settingsComplete, validateSettings } from '../data/wizard.js';
 import { useShares } from '../store/SharesContext.jsx';
 
 const LAST = 5;
@@ -40,8 +40,8 @@ export default function AddSharePage() {
 
   const [step, setStep] = useState(0);
   const [provider, setProvider] = useState(null);
-  const [path, setPath] = useState('');
-  const [pathError, setPathError] = useState('');
+  const [settings, setSettings] = useState({});
+  const [settingsErrors, setSettingsErrors] = useState({});
   const [name, setName] = useState('');
   const [driveLetter, setDriveLetter] = useState('M:');
   const [features, setFeatures] = useState({ download: true, officeOnline: true, publicSharing: true });
@@ -50,7 +50,7 @@ export default function AddSharePage() {
   const canNext = (() => {
     switch (step) {
       case 0: return !!provider;
-      case 1: return path.trim().length > 0;
+      case 1: return settingsComplete(provider, settings);
       case 2: return name.trim().length > 0 && !!driveLetter;
       case 3: return true;
       case 4: return users.length > 0;
@@ -58,15 +58,30 @@ export default function AddSharePage() {
     }
   })();
 
+  // Switching provider clears settings collected for the previous one.
+  const changeProvider = (key) => {
+    setProvider(key);
+    setSettings({});
+    setSettingsErrors({});
+  };
+
+  const changeSetting = (key, value) => {
+    setSettings((s) => ({ ...s, [key]: value }));
+    if (settingsErrors[key]) setSettingsErrors((e) => { const next = { ...e }; delete next[key]; return next; });
+  };
+
   const goNext = () => {
-    if (step === 1 && !path.trim()) { setPathError('Path is required.'); return; }
-    setPathError('');
+    if (step === 1) {
+      const errs = validateSettings(provider, settings);
+      if (Object.keys(errs).length) { setSettingsErrors(errs); return; }
+    }
+    setSettingsErrors({});
     setStep((s) => Math.min(LAST, s + 1));
   };
   const goBack = () => setStep((s) => Math.max(0, s - 1));
 
   const confirm = () => {
-    addShare(toShare({ provider, path, name, driveLetter, features, users }));
+    addShare(toShare({ provider, settings, name, driveLetter, features, users }));
     navigate('/shares');
   };
 
@@ -83,12 +98,12 @@ export default function AddSharePage() {
       <Stepper current={step} onStepClick={(i) => setStep(i)} />
 
       <div className="wizard__body">
-        {step === 0 && <StepStorageType value={provider} onChange={setProvider} />}
-        {step === 1 && <StepStorageSettings path={path} onPath={(v) => { setPath(v); if (pathError) setPathError(''); }} error={pathError} />}
+        {step === 0 && <StepStorageType value={provider} onChange={changeProvider} />}
+        {step === 1 && <StepStorageSettings provider={provider} settings={settings} onChange={changeSetting} errors={settingsErrors} />}
         {step === 2 && <StepShareDetails name={name} onName={setName} driveLetter={driveLetter} onDriveLetter={setDriveLetter} />}
         {step === 3 && <StepFeatures features={features} onToggle={(k, v) => setFeatures((f) => ({ ...f, [k]: v }))} />}
         {step === 4 && <StepUsers rows={users} setRows={setUsers} />}
-        {step === 5 && <StepReview state={{ provider, path, name, driveLetter, features, users }} onEdit={(i) => setStep(i)} />}
+        {step === 5 && <StepReview state={{ provider, settings, name, driveLetter, features, users }} onEdit={(i) => setStep(i)} />}
       </div>
 
       <div className="wizard__footer">

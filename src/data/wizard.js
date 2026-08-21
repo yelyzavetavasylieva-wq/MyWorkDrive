@@ -42,6 +42,77 @@ export function findProvider(key) {
   return null;
 }
 
+// Step 2 — provider-specific storage settings.
+// Each provider defines the fields required to access and configure that store.
+// Field types: 'text' | 'password' | 'select'. `required` fields gate the Next button.
+const S3_REGIONS = [
+  'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
+  'eu-west-1', 'eu-central-1', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1',
+];
+
+export const STORAGE_SETTINGS = {
+  smb: [
+    { key: 'path', label: 'Path', type: 'text', required: true, placeholder: '\\\\mwf\\network-share',
+      hint: 'UNC path to the on-prem Windows or NAS file share.' },
+  ],
+  onedrive: [
+    { key: 'account', label: 'OneDrive account (UPN)', type: 'text', required: true, placeholder: 'user@contoso.com',
+      hint: 'User principal name whose OneDrive for Business will be connected.' },
+    { key: 'rootFolder', label: 'Root folder', type: 'text', required: false, placeholder: '/Documents',
+      hint: 'Optional subfolder to expose as the share root. Leave blank for the full OneDrive.' },
+  ],
+  sharepoint: [
+    { key: 'siteUrl', label: 'Site URL', type: 'text', required: true, placeholder: 'https://contoso.sharepoint.com/sites/Team',
+      hint: 'URL of the SharePoint site to connect.' },
+    { key: 'library', label: 'Document library', type: 'text', required: true, placeholder: 'Shared Documents',
+      hint: 'Name of the document library within the site.' },
+    { key: 'rootFolder', label: 'Root folder', type: 'text', required: false, placeholder: '/General',
+      hint: 'Optional subfolder within the library.' },
+  ],
+  azureBlob: [
+    { key: 'accountName', label: 'Storage account name', type: 'text', required: true, placeholder: 'mystorageaccount' },
+    { key: 'container', label: 'Container', type: 'text', required: true, placeholder: 'documents' },
+    { key: 'accessKey', label: 'Access key', type: 'password', required: true, placeholder: 'Enter the storage account access key',
+      hint: 'Primary or secondary key from the storage account.' },
+    { key: 'prefix', label: 'Path prefix', type: 'text', required: false, placeholder: '/team' },
+  ],
+  azureFiles: [
+    { key: 'accountName', label: 'Storage account name', type: 'text', required: true, placeholder: 'mystorageaccount' },
+    { key: 'fileShare', label: 'File share', type: 'text', required: true, placeholder: 'team-share' },
+    { key: 'accessKey', label: 'Access key', type: 'password', required: true, placeholder: 'Enter the storage account access key',
+      hint: 'Primary or secondary key from the storage account.' },
+    { key: 'path', label: 'Path', type: 'text', required: false, placeholder: '/subfolder' },
+  ],
+  s3: [
+    { key: 'bucket', label: 'Bucket name', type: 'text', required: true, placeholder: 'my-bucket' },
+    { key: 'region', label: 'Region', type: 'select', required: true, options: S3_REGIONS },
+    { key: 'endpoint', label: 'Endpoint', type: 'text', required: false, placeholder: 'https://s3.amazonaws.com',
+      hint: 'Custom endpoint for S3-compatible providers. Leave blank for AWS S3.' },
+    { key: 'accessKeyId', label: 'Access key ID', type: 'text', required: true, placeholder: 'AKIAIOSFODNN7EXAMPLE' },
+    { key: 'secretAccessKey', label: 'Secret access key', type: 'password', required: true, placeholder: 'Enter the secret access key' },
+    { key: 'prefix', label: 'Path prefix', type: 'text', required: false, placeholder: '/team' },
+  ],
+};
+
+export function settingsFieldsFor(providerKey) {
+  return STORAGE_SETTINGS[providerKey] || [];
+}
+
+// Returns a map of { fieldKey: errorMessage } for missing required fields.
+export function validateSettings(providerKey, settings) {
+  const errors = {};
+  for (const f of settingsFieldsFor(providerKey)) {
+    if (f.required && !String((settings && settings[f.key]) || '').trim()) {
+      errors[f.key] = `${f.label} is required.`;
+    }
+  }
+  return errors;
+}
+
+export function settingsComplete(providerKey, settings) {
+  return providerKey != null && Object.keys(validateSettings(providerKey, settings)).length === 0;
+}
+
 // Step 3 — drive letters
 export const DRIVE_LETTERS = ['M:', 'N:', 'O:', 'P:', 'S:', 'T:', 'U:', 'V:', 'W:', 'X:', 'Y:', 'Z:'];
 
