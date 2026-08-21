@@ -1,6 +1,6 @@
 /* ============================ Wizard shell ============================ */
 .wizard { display: flex; flex-direction: column; }
-.breadcrumbs { display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.breadcrumbs { display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-2xl); }
 .breadcrumbs__link { color: var(--text-brand-link); }
 .breadcrumbs__link--muted { color: var(--text-tertiary); }
 .breadcrumbs__link--muted:hover { color: var(--text-secondary); }
@@ -133,7 +133,8 @@ button.step__circle { cursor: pointer; }
 }
 .info-banner__icon { color: var(--fg-brand); }
 
-.ug-empty { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-md); padding: 40px 16px; }
+.ug-empty { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs); padding: 40px 16px; }
+.ug-empty .featured-icon { margin-bottom: var(--spacing-lg); }
 .ug-empty__desc { color: var(--text-tertiary); }
 .featured-icon--gray { background: var(--bg-tertiary); color: var(--fg-quaternary); }
 .featured-icon--warning { background: #fef0c7; color: var(--fg-warning); }
