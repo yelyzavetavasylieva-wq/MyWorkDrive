@@ -10,8 +10,13 @@ export function SharesProvider({ children }) {
     setShares((prev) => [{ ...share, id: Date.now() }, ...prev]);
   }, []);
 
+  const removeShares = useCallback((ids) => {
+    const set = new Set(ids);
+    setShares((prev) => prev.filter((s) => !set.has(s.id)));
+  }, []);
+
   return (
-    <SharesContext.Provider value={{ shares, addShare }}>
+    <SharesContext.Provider value={{ shares, addShare, removeShares }}>
       {children}
     </SharesContext.Provider>
   );

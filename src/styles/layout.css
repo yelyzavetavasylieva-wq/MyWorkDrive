@@ -39,7 +39,7 @@
 .sidebar__toggle:hover { background: var(--bg-active); }
 
 /* Search */
-.sidebar__search-wrap { padding: 0 var(--spacing-3xl); }
+.sidebar__search-wrap { padding: var(--spacing-xl) var(--spacing-3xl) var(--spacing-xs); }
 .sidebar--collapsed .sidebar__search-wrap { padding: 0; display: flex; justify-content: center; }
 .sidebar__search-icon { width: 40px; height: 40px; color: var(--fg-quaternary); }
 .sidebar__search-icon:hover { background: var(--bg-active); }
@@ -49,7 +49,7 @@
   background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
-  padding: 10px 14px;
+  height: 40px; padding: 0 14px;
   box-shadow: var(--shadow-xs);
 }
 .field:focus-within { border-color: var(--brand-200); box-shadow: 0 0 0 3px rgba(51, 136, 255, 0.18), var(--shadow-xs); }

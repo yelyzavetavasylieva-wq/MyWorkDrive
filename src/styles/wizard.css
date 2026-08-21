@@ -115,7 +115,7 @@ button.step__circle { cursor: pointer; }
 .ug-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-lg); margin-bottom: var(--spacing-2xl); }
 .ug-toolbar__search { width: 420px; max-width: 50%; }
 .ug-toolbar__actions { display: flex; gap: var(--spacing-lg); }
-.btn--sm { padding: 6px 10px; font-size: 14px; line-height: 20px; }
+.btn--sm { height: auto; padding: 6px 10px; font-size: 14px; line-height: 20px; }
 .btn .icon-box { flex-shrink: 0; }
 
 .perm-table th.perm-th, .perm-table td.perm-td { text-align: center; }

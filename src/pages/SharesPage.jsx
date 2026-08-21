@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { STORAGE_LABELS } from '../data/shares.js';
 import { useShares } from '../store/SharesContext.jsx';
 import {
-  IconSearch, IconSortDown, IconEdit, IconCheckCircle,
+  IconSearch, IconSortDown, IconEdit, IconCheckCircle, IconChevronDown, IconDismiss,
   IconErrorCircle, IconWarning, IconGlobe, IconLockOpen, IconArrowDownload, IconDocEdit,
 } from '../ui/icons.jsx';
+import { IconTrash } from '../ui/wizard-icons.jsx';
 import {
   LogoS3, LogoSMB, LogoOneDrive, LogoAzureBlob, LogoSharePoint, LogoAzureFiles,
 } from '../ui/logos.jsx';
 import Toggle from '../ui/Toggle.jsx';
 import Checkbox from '../ui/Checkbox.jsx';
 import Pagination from '../ui/Pagination.jsx';
+import DeleteShareModal from './DeleteShareModal.jsx';
+import AssignedUsersModal from './AssignedUsersModal.jsx';
 
 const STORAGE_LOGOS = {
   s3: LogoS3, smb: LogoSMB, onedrive: LogoOneDrive,
@@ -45,24 +48,28 @@ function FeatureCell({ features }) {
   );
 }
 
-function TruncCell({ text, more }) {
+function TruncCell({ text, more, onMore }) {
   return (
     <div className="trunc-cell">
       <span className="trunc-cell__text t-sm-data">{text}</span>
-      {more && <button type="button" className="more-link t-sm-data">More</button>}
+      {more && <button type="button" className="more-link t-sm-data" onClick={onMore}>More</button>}
     </div>
   );
 }
 
 export default function SharesPage() {
   const navigate = useNavigate();
-  const { shares } = useShares();
+  const { shares, removeShares } = useShares();
   const [driveLetters, setDriveLetters] = useState(false);
+  const [driveLetterMap, setDriveLetterMap] = useState({});
   const [query, setQuery] = useState('');
   // null = design's natural order; 'asc' / 'desc' after the user sorts by Name.
   const [sortDir, setSortDir] = useState(null);
   const [selected, setSelected] = useState(() => new Set());
   const [page, setPage] = useState(1);
+  const [assignedShare, setAssignedShare] = useState(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [toasts, setToasts] = useState([]);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -90,6 +97,30 @@ export default function SharesPage() {
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
+  };
+
+  const driveLetterFor = (row, i) => driveLetterMap[row.id] ?? DRIVE_LETTERS[i % DRIVE_LETTERS.length];
+  const setDriveLetter = (id, value) => setDriveLetterMap((m) => ({ ...m, [id]: value }));
+
+  const pushToast = (text) => {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    setToasts((t) => [...t, { id, text }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4000);
+  };
+  const dismissToast = (id) => setToasts((t) => t.filter((x) => x.id !== id));
+
+  const selectedCount = selected.size;
+  const selectedShares = shares.filter((s) => selected.has(s.id));
+
+  const confirmDelete = () => {
+    const ids = [...selected];
+    const text = ids.length === 1
+      ? `“${selectedShares[0]?.name}” share successfully deleted`
+      : `${ids.length} shares successfully deleted`;
+    removeShares(ids);
+    setSelected(new Set());
+    setDeleteOpen(false);
+    pushToast(text);
   };
 
   return (
@@ -138,6 +169,11 @@ export default function SharesPage() {
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
+          {selectedCount > 0 && (
+            <button type="button" className="btn btn--destructive" onClick={() => setDeleteOpen(true)}>
+              <span className="icon-box icon-20"><IconTrash /></span>Delete
+            </button>
+          )}
         </div>
 
         <div className="table-wrap">
@@ -198,7 +234,19 @@ export default function SharesPage() {
                       </div>
                     </td>
                     {driveLetters && (
-                      <td className="td"><span className="t-sm-data">{DRIVE_LETTERS[i % DRIVE_LETTERS.length]}</span></td>
+                      <td className="td">
+                        <div className="select select--sm select--drive">
+                          <select
+                            className="select__native t-sm-data"
+                            value={driveLetterFor(row, i)}
+                            onChange={(e) => setDriveLetter(row.id, e.target.value)}
+                            aria-label={`Drive letter for ${row.name}`}
+                          >
+                            {DRIVE_LETTERS.map((d) => <option key={d} value={d}>{d}</option>)}
+                          </select>
+                          <span className="icon-box icon-20 select__chevron"><IconChevronDown /></span>
+                        </div>
+                      </td>
                     )}
                     <td className="td td--features">
                       <div className="cell cell--features"><FeatureCell features={row.features} /></div>
@@ -209,8 +257,8 @@ export default function SharesPage() {
                         <span className="t-sm-data">{STORAGE_LABELS[row.storage]}</span>
                       </div>
                     </td>
-                    <td className="td"><TruncCell text={row.users.join(', ')} more={row.usersMore} /></td>
-                    <td className="td"><TruncCell text={row.groups.join(', ')} more={row.groupsMore} /></td>
+                    <td className="td"><TruncCell text={row.users.join(', ')} more={row.usersMore} onMore={() => setAssignedShare(row)} /></td>
+                    <td className="td"><TruncCell text={row.groups.join(', ')} more={row.groupsMore} onMore={() => setAssignedShare(row)} /></td>
                     <td className="td td--actions">
                       <div className="cell cell--actions">
                         <button type="button" className="icon-btn icon-btn--table" aria-label={`Edit ${row.name}`}>
@@ -235,6 +283,29 @@ export default function SharesPage() {
 
         <Pagination page={page} onPage={setPage} rows={10} onRowsClick={() => {}} />
       </section>
+
+      <AssignedUsersModal open={!!assignedShare} share={assignedShare} onClose={() => setAssignedShare(null)} />
+      <DeleteShareModal
+        open={deleteOpen}
+        count={selectedCount}
+        name={selectedShares[0]?.name}
+        onCancel={() => setDeleteOpen(false)}
+        onConfirm={confirmDelete}
+      />
+
+      {toasts.length > 0 && (
+        <div className="toast-wrap">
+          {toasts.map((t) => (
+            <div key={t.id} className="toast" role="status">
+              <span className="icon-box icon-20 toast__icon"><IconCheckCircle /></span>
+              <span className="t-sm-regular toast__text">{t.text}</span>
+              <button type="button" className="toast__close" onClick={() => dismissToast(t.id)} aria-label="Dismiss">
+                <span className="icon-box icon-16"><IconDismiss /></span>
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
