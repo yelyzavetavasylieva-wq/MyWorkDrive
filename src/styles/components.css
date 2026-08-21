@@ -142,7 +142,7 @@
 .table-toolbar { display: flex; align-items: center; gap: var(--spacing-lg); }
 
 /* Drive Letter cell dropdown */
-.select--drive { width: 84px; }
+.select--drive { width: 61px; }
 .select--drive .select__native { height: 32px; padding: 0 28px 0 10px; }
 .select--drive .select__chevron { right: 8px; }
 

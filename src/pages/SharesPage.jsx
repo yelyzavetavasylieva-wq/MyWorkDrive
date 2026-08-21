@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { STORAGE_LABELS } from '../data/shares.js';
 import { useShares } from '../store/SharesContext.jsx';
 import {
@@ -59,6 +59,7 @@ function TruncCell({ text, more, onMore }) {
 
 export default function SharesPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { shares, removeShares } = useShares();
   const [driveLetters, setDriveLetters] = useState(false);
   const [driveLetterMap, setDriveLetterMap] = useState({});
@@ -108,6 +109,15 @@ export default function SharesPage() {
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4000);
   };
   const dismissToast = (id) => setToasts((t) => t.filter((x) => x.id !== id));
+
+  // Show a confirmation toast when arriving here after creating a share.
+  useEffect(() => {
+    if (location.state?.toast) {
+      pushToast(location.state.toast);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
   const selectedCount = selected.size;
   const selectedShares = shares.filter((s) => selected.has(s.id));
@@ -170,7 +180,7 @@ export default function SharesPage() {
             />
           </div>
           {selectedCount > 0 && (
-            <button type="button" className="btn btn--destructive" onClick={() => setDeleteOpen(true)}>
+            <button type="button" className="btn btn--secondary" onClick={() => setDeleteOpen(true)}>
               <span className="icon-box icon-20"><IconTrash /></span>Delete
             </button>
           )}
@@ -235,7 +245,7 @@ export default function SharesPage() {
                     </td>
                     {driveLetters && (
                       <td className="td">
-                        <div className="select select--sm select--drive">
+                        <div className="select select--drive">
                           <select
                             className="select__native t-sm-data"
                             value={driveLetterFor(row, i)}

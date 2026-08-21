@@ -82,7 +82,7 @@ export default function AddSharePage() {
 
   const confirm = () => {
     addShare(toShare({ provider, settings, name, driveLetter, features, users }));
-    navigate('/shares');
+    navigate('/shares', { state: { toast: `“${name.trim()}” created successfully.` } });
   };
 
   return (

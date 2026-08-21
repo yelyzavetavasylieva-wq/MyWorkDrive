@@ -171,8 +171,9 @@ button.step__circle { cursor: pointer; }
 .review-card__head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; }
 .review-card__head h3 { color: var(--text-primary-2); }
 .kv-table { width: 100%; border-collapse: collapse; border-top: 1px solid var(--border-secondary); }
-.kv-th { text-align: left; background: var(--bg-secondary); color: var(--text-tertiary); padding: 10px 20px; border-bottom: 1px solid var(--border-secondary); width: 40%; }
+.kv-th { text-align: left; background: var(--bg-secondary); color: var(--text-tertiary); padding: 10px 20px; border-bottom: 1px solid var(--border-secondary); }
 .kv-td { padding: 12px 20px; border-bottom: 1px solid var(--border-secondary); color: var(--text-tertiary-2); vertical-align: middle; }
+.kv-th:first-child, .kv-td:first-child { width: 320px; border-right: 1px solid var(--border-secondary); }
 .kv-table tbody tr:last-child .kv-td { border-bottom: none; }
 .kv-td--value { color: var(--text-primary-2); }
 .kv-empty { color: var(--text-placeholder); }

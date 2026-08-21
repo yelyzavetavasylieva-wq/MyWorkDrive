@@ -35,7 +35,7 @@ export default function Stepper({ current, onStepClick }) {
               )}
               <span className={'step__line step__line--right' + (i < current ? ' is-done' : '')} />
             </div>
-            <span className="step__label t-md-regular">{label}</span>
+            <span className="step__label t-md-semibold">{label}</span>
           </li>
         );
       })}
