@@ -1,0 +1,5320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Components Manifest</title>
+  <style>
+      :root {
+          --bg: #0b0c10;
+          --panel: #121318;
+          --muted: #9aa0a6;
+          --fg: #e8eaed;
+          --ok: #22c55e;
+          --info: #1e88e5;
+          --err: #c62828;
+          --ok-bg: #0c1a13;
+          --info-bg: #0c1624;
+          --err-bg: #1a0e0e;
+          --chip: #1f2330;
+          --border: #2b2f3a;
+          --link: #8ab4f8;
+          --active-ring: 1px; /* 1px active ring for pills and toggles */
+      }
+
+      * {
+          box-sizing: border-box;
+      }
+
+      html,
+      body {
+          margin: 0;
+          background: var(--bg);
+          color: var(--fg);
+          font: 14px/1.5 system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Ubuntu,
+          Cantarell,
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans';
+      }
+
+      .wrap {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 16px 20px;
+      }
+
+      header {
+          position: sticky;
+          top: 0;
+          backdrop-filter: blur(6px);
+          background: color-mix(in srgb, var(--bg) 84%, transparent);
+          border-bottom: 1px solid var(--border);
+          z-index: 10;
+      }
+
+      h1 {
+          font-size: 20px;
+          margin: 0 0 6px;
+      }
+
+      .summary {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          align-items: center;
+      }
+
+      /* Top filter pills */
+      .filter-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          background: var(--panel);
+          text-decoration: none;
+          cursor: pointer;
+          user-select: none;
+          color: var(--fg);
+      }
+
+      .filter-pill.ok {
+          color: #b9f6ca;
+          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+          background: color-mix(in srgb, var(--ok) 18%, #000);
+      }
+
+      .filter-pill.info {
+          color: #b3d9ff;
+          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+          background: var(--info-bg);
+      }
+
+      .filter-pill.err {
+          color: #ff9aa0;
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+          background: var(--err-bg);
+      }
+
+      .filter-pill.all {
+          color: #d7dbe0;
+          border-color: var(--border);
+          background: var(--panel);
+      }
+
+      .filter-pill[aria-disabled='true'] {
+          cursor: default;
+          text-decoration: none;
+      }
+
+      .filter-pill:focus,
+      .filter-pill:active {
+          outline: none;
+          box-shadow: none;
+      }
+
+      /* Selected top pill ring via :target */
+      #filter-all:target ~ header .filter-pill[data-k='all'],
+      #filter-errors:target ~ header .filter-pill[data-k='errors'],
+      #filter-infos:target ~ header .filter-pill[data-k='infos'],
+      #filter-story-errors:target ~ header .filter-pill[data-k='story-errors'],
+      #filter-doc-errors:target ~ header .filter-pill[data-k='docs'],
+      #filter-docs:target ~ header .filter-pill[data-k='docs'] {
+          box-shadow: 0 0 0 var(--active-ring) currentColor;
+          border-color: currentColor;
+      }
+
+      /* Hidden targets for filtering */
+      #filter-all,
+      #filter-errors,
+      #filter-infos,
+      #filter-story-errors,
+      #filter-doc-errors,
+      #filter-docs {
+          display: none;
+      }
+
+      main {
+          padding: 36px 0 40px;
+      }
+
+      .grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 18px;
+      }
+
+      /* one card per row */
+
+      .card {
+          border: 1px solid var(--border);
+          background: var(--panel);
+          border-radius: 14px;
+          padding: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+      }
+
+      .head {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+      }
+
+      .title {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+      }
+
+      .title h2 {
+          font-size: 16px;
+          margin: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+      }
+
+      .meta {
+          font-size: 12px;
+          color: var(--muted);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+      }
+
+      .kv {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+      }
+
+      .chip {
+          font-size: 12px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          background: var(--chip);
+          border: 1px solid var(--border);
+      }
+
+      .hint {
+          color: var(--muted);
+          font-size: 12px;
+      }
+
+      .badges {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+      }
+
+      /* Per-card badges: labels become toggles when clickable */
+      .badge {
+          font-size: 12px;
+          padding: 3px 8px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          background: var(--chip);
+          color: #d7dbe0;
+      }
+
+      .badge.ok {
+          color: #b9f6ca;
+          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+      }
+
+      .badge.info {
+          color: #b3d9ff;
+          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+      }
+
+      .badge.err {
+          color: #ff9aa0;
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+      }
+
+      .as-toggle {
+          cursor: pointer;
+      }
+
+      /* 1px ring on active toggle */
+      .tg-err:checked + label.as-toggle,
+      .tg-info:checked + label.as-toggle,
+      .tg-stories:checked + label.as-toggle,
+      .tg-docs:checked + label.as-toggle,
+      .tg-subcomponents:checked + label.as-toggle,
+      .tg-content:checked + label.as-toggle,
+      .tg-props:checked + label.as-toggle {
+          box-shadow: 0 0 0 var(--active-ring) currentColor;
+          border-color: currentColor;
+      }
+
+      /* Panels: hidden by default, shown when respective toggle checked */
+      .panels {
+          display: grid;
+          gap: 10px;
+      }
+
+      .panel {
+          display: none;
+      }
+
+      .tg-err:checked ~ .panels .panel-err {
+          display: grid;
+      }
+
+      .tg-info:checked ~ .panels .panel-info {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-stories:checked ~ .panels .panel-stories {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-docs:checked ~ .panels .panel-docs {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-subcomponents:checked ~ .panels .panel-subcomponents {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-content:checked ~ .panels .panel-content {
+          display: grid;
+          gap: 8px;
+      }
+
+      .tg-props:checked ~ .panels .panel-props {
+          display: grid;
+      }
+
+      /* Colored notes for prop type error + info */
+      .note {
+          padding: 12px;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+      }
+
+      .note.err {
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+          background: var(--err-bg);
+          color: #ffd1d4;
+      }
+
+      .note.info {
+          border-color: color-mix(in srgb, var(--info) 55%, var(--border));
+          background: var(--info-bg);
+          color: #d6e8ff;
+      }
+
+      .note.ok {
+          border-color: color-mix(in srgb, var(--ok) 55%, var(--border));
+          background: var(--ok-bg);
+          color: var(--fg);
+      }
+
+      .note-title {
+          font-weight: 600;
+          margin-bottom: 6px;
+      }
+
+      .note-body {
+          white-space: normal;
+      }
+
+      /* Story error cards */
+      .ex {
+          padding: 10px;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          background: #0f131b;
+      }
+
+      .ex.err {
+          border-color: color-mix(in srgb, var(--err) 55%, var(--border));
+      }
+
+      .row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+      }
+
+      .status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          display: inline-block;
+      }
+
+      .dot-ok {
+          background: var(--ok);
+      }
+
+      .dot-err {
+          background: var(--err);
+      }
+
+      .ex-name {
+          font-weight: 600;
+      }
+
+      /* Error groups (visible in errors filter) */
+      .error-groups {
+          display: none;
+          margin-bottom: 16px;
+      }
+
+      .group {
+          border: 1px solid var(--border);
+          background: var(--panel);
+          border-radius: 14px;
+          overflow: hidden;
+      }
+
+      .group + .group {
+          margin-top: 12px;
+      }
+
+      .group-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 14px;
+          cursor: pointer;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .group-header:hover {
+          background: #141722;
+      }
+
+      .group-title {
+          font-weight: 600;
+          flex: 1;
+      }
+
+      .group-count {
+          font-size: 12px;
+          color: var(--muted);
+      }
+
+      .group-cards {
+          display: none;
+          padding: 12px;
+      }
+
+      .group .card {
+          margin: 12px 0;
+      }
+
+      .group .card:first-child {
+          margin-top: 0;
+      }
+
+      .group .card:last-child {
+          margin-bottom: 0;
+      }
+
+      /* caret rotation */
+      .group-tg:checked + label .caret {
+          transform: rotate(90deg);
+      }
+
+      .caret {
+          transition: transform 0.15s ease;
+      }
+
+      /* toggle body */
+      .group-tg:checked ~ .group-cards {
+          display: block;
+      }
+
+      /* CSS-only filtering of cards via top pills */
+      #filter-errors:target ~ main .card:not(.has-error):not(.has-story-error) {
+          display: none;
+      }
+
+      #filter-infos:target ~ main .card:not(.has-info) {
+          display: none;
+      }
+
+      #filter-story-errors:target ~ main .card:not(.has-story-error) {
+          display: none;
+      }
+
+      #filter-doc-errors:target ~ main .card:not(.has-doc-error) {
+          display: none;
+      }
+
+      #filter-docs:target ~ main .card:has(> .tg-docs),
+      #filter-docs:target ~ main .card.is-doc {
+          display: block;
+      }
+
+      #filter-docs:target ~ main .card:not(:has(> .tg-docs)):not(.is-doc) {
+          display: none;
+      }
+
+      #filter-all:target ~ main .card {
+          display: block;
+      }
+
+      /* In errors view, hide standalone component-error cards in the regular grid (they will appear in groups) */
+      #filter-errors:target ~ main .grid .card.has-error {
+          display: none;
+      }
+
+      /* Show grouped section only in errors view */
+      #filter-errors:target ~ main .error-groups {
+          display: block;
+      }
+
+      /* Section titles */
+      .section-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--muted);
+          margin: 24px 0 12px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--border);
+      }
+      .section-title:first-child {
+          margin-top: 0;
+      }
+
+      /* When a toggle is checked, show the corresponding panel */
+      .card > .tg-err:checked ~ .panels .panel-err {
+          display: grid;
+      }
+      
+      .card > .tg-info:checked ~ .panels .panel-info {
+          display: grid;
+      }
+      
+      .card > .tg-stories:checked ~ .panels .panel-stories {
+          display: grid;
+      }
+
+      .card > .tg-docs:checked ~ .panels .panel-docs {
+          display: grid;
+      }
+
+      .card > .tg-subcomponents:checked ~ .panels .panel-subcomponents {
+          display: grid;
+      }
+
+      .card > .tg-content:checked ~ .panels .panel-content {
+          display: grid;
+      }
+
+      /* Add vertical spacing around panels only when any panel is visible */
+      .card > .tg-err:checked ~ .panels,
+      .card > .tg-info:checked ~ .panels,
+      .card > .tg-stories:checked ~ .panels,
+      .card > .tg-docs:checked ~ .panels,
+      .card > .tg-subcomponents:checked ~ .panels,
+      .card > .tg-content:checked ~ .panels,
+      .card > .tg-props:checked ~ .panels {
+          margin: 10px 0;
+      }
+
+      /* Optional: a subtle 1px ring on the active badge, using :has() if available */
+      @supports selector(.card:has(.tg-err:checked)) {
+          .card:has(.tg-err:checked) label[for$='-err'],
+          .card:has(.tg-info:checked) label[for$='-info'],
+          .card:has(.tg-stories:checked) label[for$='-stories'],
+          .card:has(.tg-docs:checked) label[for$='-docs'],
+          .card:has(.tg-subcomponents:checked) label[for$='-subcomponents'],
+          .card:has(.tg-content:checked) label[for$='-content'],
+          .card:has(.tg-props:checked) label[for$='-props'] {
+              box-shadow: 0 0 0 1px currentColor;
+              border-color: currentColor;
+          }
+      }
+
+      /* Wrap long lines in code blocks at ~120 characters */
+      pre, code {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      }
+      pre {
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          overflow-x: auto; /* fallback for extremely long tokens */
+          margin: 8px 0 0;
+      }
+      pre > code {
+          display: block;
+          white-space: inherit;
+          overflow-wrap: inherit;
+          word-break: inherit;
+          inline-size: min(100%, 120ch);
+      }
+
+      /* MDX content container for docs */
+      .mdx-content {
+          background: #0f131b;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 12px;
+          max-height: 400px;
+          overflow-y: auto;
+          margin-top: 8px;
+      }
+  </style>
+</head>
+<body>
+<!-- Hidden targets for the top-level filters -->
+<span id="filter-all"></span>
+<span id="filter-errors"></span>
+<span id="filter-infos"></span>
+<span id="filter-story-errors"></span>
+<span id="filter-doc-errors"></span>
+<span id="filter-docs"></span>
+<header>
+  <div class="wrap">
+    <h1>Manifest Debugger</h1>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill err" data-k="errors" href="#filter-errors">15/20 prop type errors</a><a class="filter-pill info" data-k="infos" href="#filter-infos">20/20 infos</a><span class="filter-pill ok" aria-disabled="true">34 stories ok</span></div>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="note info" style="margin-bottom: 16px;">
+            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>0.6s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
+            <pre><code>typescript: {
+  reactDocgen: 'react-docgen-typescript',
+}</code></pre>
+            Note: <code>react-docgen-typescript</code> can be slower. If performance is acceptable for your project, it generally produces better results.
+            <a href="https://storybook.js.org/docs/api/main-config/main-config-typescript#reactdocgen" target="_blank">Learn more</a>
+          </div>
+    <h2 class="section-title">Components</h2>
+    <div class="grid" role="list">
+      
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Badges">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Badges</h2>
+      <div class="badges">
+        <label for="c-0-design-system-badges-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-0-design-system-badges-info" class="badge info as-toggle">1 info</label>
+        <label for="c-0-design-system-badges-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Badges.stories.jsx">design-system-badges · ./src/stories/Badges.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-0-design-system-badges-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-0-design-system-badges-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-0-design-system-badges-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Tag / _Table badge and the status icons used in the Shares
+  5 | // table. Implemented as `.feature-badge` and `.status-icon--*` in components.css.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Badges&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Badges.stories.jsx:
+import React from &#39;react&#39;;
+import { IconGlobe, IconLockOpen, IconArrowDownload, IconDocEdit, IconErrorCircle, IconWarning } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Tag / _Table badge and the status icons used in the Shares
+// table. Implemented as `.feature-badge` and `.status-icon--*` in components.css.
+const meta = {
+  title: &#39;Design System/Badges&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const FEATURES = [
+  [&#39;globe&#39;, IconGlobe, &#39;Public sharing&#39;],
+  [&#39;lock&#39;, IconLockOpen, &#39;Lock&#39;],
+  [&#39;download&#39;, IconArrowDownload, &#39;Download&#39;],
+  [&#39;docedit&#39;, IconDocEdit, &#39;Office Online edit&#39;],
+];
+
+const Label = ({ children }) =&gt; (
+  &lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 10 }}&gt;{children}&lt;/div&gt;
+);
+
+export const FeatureBadges = {
+  render: () =&gt; (
+    &lt;div&gt;
+      &lt;Label&gt;Feature badges (.feature-badge)&lt;/Label&gt;
+      &lt;div className=&quot;feature-badges&quot;&gt;
+        {FEATURES.map(([k, Ico]) =&gt; (
+          &lt;span key={k} className=&quot;feature-badge&quot;&gt;&lt;span className=&quot;icon-box feature-badge__icon&quot;&gt;&lt;Ico width=&quot;12&quot; height=&quot;12&quot; /&gt;&lt;/span&gt;&lt;/span&gt;
+        ))}
+      &lt;/div&gt;
+      &lt;div style={{ marginTop: 16, display: &#39;flex&#39;, gap: 16, color: &#39;var(--text-tertiary)&#39;, fontSize: 12 }}&gt;
+        {FEATURES.map(([k, , name]) =&gt; &lt;span key={k}&gt;{name}&lt;/span&gt;)}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  ),
+};
+
+export const StatusIcons = {
+  render: () =&gt; (
+    &lt;div&gt;
+      &lt;Label&gt;Status icons (.status-icon--error / --warning)&lt;/Label&gt;
+      &lt;div style={{ display: &#39;flex&#39;, gap: 24, alignItems: &#39;center&#39; }}&gt;
+        &lt;span className=&quot;icon-box icon-16 status-icon status-icon--error&quot;&gt;&lt;IconErrorCircle /&gt;&lt;/span&gt;
+        &lt;span className=&quot;icon-box icon-16 status-icon status-icon--warning&quot;&gt;&lt;IconWarning /&gt;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconErrorCircle, IconWarning } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Feature Badges</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const FeatureBadges = () =&gt; (
+  &lt;div&gt;
+    &lt;Label&gt;Feature badges (.feature-badge)&lt;/Label&gt;
+    &lt;div className=&quot;feature-badges&quot;&gt;
+      {FEATURES.map(([k, Ico]) =&gt; (
+        &lt;span key={k} className=&quot;feature-badge&quot;&gt;&lt;span className=&quot;icon-box feature-badge__icon&quot;&gt;&lt;Ico width=&quot;12&quot; height=&quot;12&quot; /&gt;&lt;/span&gt;&lt;/span&gt;
+      ))}
+    &lt;/div&gt;
+    &lt;div style={{ marginTop: 16, display: &#39;flex&#39;, gap: 16, color: &#39;var(--text-tertiary)&#39;, fontSize: 12 }}&gt;
+      {FEATURES.map(([k, , name]) =&gt; &lt;span key={k}&gt;{name}&lt;/span&gt;)}
+    &lt;/div&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Status Icons</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const StatusIcons = () =&gt; (
+  &lt;div&gt;
+    &lt;Label&gt;Status icons (.status-icon--error / --warning)&lt;/Label&gt;
+    &lt;div style={{ display: &#39;flex&#39;, gap: 24, alignItems: &#39;center&#39; }}&gt;
+      &lt;span className=&quot;icon-box icon-16 status-icon status-icon--error&quot;&gt;&lt;IconErrorCircle /&gt;&lt;/span&gt;
+      &lt;span className=&quot;icon-box icon-16 status-icon status-icon--warning&quot;&gt;&lt;IconWarning /&gt;&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Breadcrumbs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Breadcrumbs</h2>
+      <div class="badges">
+        <label for="c-1-design-system-breadcrumbs-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-1-design-system-breadcrumbs-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-1-design-system-breadcrumbs-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Breadcrumbs.stories.jsx">design-system-breadcrumbs · ./src/stories/Breadcrumbs.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-1-design-system-breadcrumbs-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-1-design-system-breadcrumbs-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-1-design-system-breadcrumbs-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  3 | // Figma: UI kit → Breadcrumbs. Implemented as `.breadcrumbs` in wizard.css,
+  4 | // shown at the top of the Add new share wizard.
+&gt; 5 | const meta = {
+    | ^
+  6 |   title: &#39;Design System/Breadcrumbs&#39;,
+  7 |   parameters: { layout: &#39;padded&#39; },
+  8 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Breadcrumbs.stories.jsx:
+import React from &#39;react&#39;;
+
+// Figma: UI kit → Breadcrumbs. Implemented as `.breadcrumbs` in wizard.css,
+// shown at the top of the Add new share wizard.
+const meta = {
+  title: &#39;Design System/Breadcrumbs&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+export const Default = {
+  render: () =&gt; (
+    &lt;nav className=&quot;breadcrumbs t-md-regular&quot; aria-label=&quot;Breadcrumb&quot;&gt;
+      &lt;a href=&quot;#&quot; className=&quot;breadcrumbs__link breadcrumbs__link--muted&quot; onClick={(e) =&gt; e.preventDefault()}&gt;Shares&lt;/a&gt;
+      &lt;span className=&quot;breadcrumbs__sep&quot;&gt;›&lt;/span&gt;
+      &lt;span className=&quot;breadcrumbs__link&quot;&gt;Add new share&lt;/span&gt;
+    &lt;/nav&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Breadcrumbs } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; (
+  &lt;nav className=&quot;breadcrumbs t-md-regular&quot; aria-label=&quot;Breadcrumb&quot;&gt;
+    &lt;a href=&quot;#&quot; className=&quot;breadcrumbs__link breadcrumbs__link--muted&quot; onClick={(e) =&gt; e.preventDefault()}&gt;Shares&lt;/a&gt;
+    &lt;span className=&quot;breadcrumbs__sep&quot;&gt;›&lt;/span&gt;
+    &lt;span className=&quot;breadcrumbs__link&quot;&gt;Add new share&lt;/span&gt;
+  &lt;/nav&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Buttons">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Buttons</h2>
+      <div class="badges">
+        <label for="c-2-design-system-buttons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-2-design-system-buttons-info" class="badge info as-toggle">1 info</label>
+        <label for="c-2-design-system-buttons-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Buttons.stories.jsx">design-system-buttons · ./src/stories/Buttons.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-2-design-system-buttons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-2-design-system-buttons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-2-design-system-buttons-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+   5 | // Figma: UI kit → Buttons (Button, Button destructive). Implemented as the
+   6 | // `.btn` class family in src/styles/components.css + wizard.css (`.btn--sm`).
+&gt;  7 | const meta = {
+     | ^
+   8 |   title: &#39;Design System/Buttons&#39;,
+   9 |   parameters: { layout: &#39;padded&#39; },
+  10 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Buttons.stories.jsx:
+import React from &#39;react&#39;;
+import { IconPlus, IconImport } from &#39;../ui/wizard-icons.jsx&#39;;
+import { IconEdit, IconCheckCircle } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Buttons (Button, Button destructive). Implemented as the
+// `.btn` class family in src/styles/components.css + wizard.css (`.btn--sm`).
+const meta = {
+  title: &#39;Design System/Buttons&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Row = ({ label, children }) =&gt; (
+  &lt;div style={{ marginBottom: 28 }}&gt;
+    &lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 10 }}&gt;{label}&lt;/div&gt;
+    &lt;div style={{ display: &#39;flex&#39;, gap: 12, alignItems: &#39;center&#39;, flexWrap: &#39;wrap&#39; }}&gt;{children}&lt;/div&gt;
+  &lt;/div&gt;
+);
+
+export const Variants = {
+  render: () =&gt; (
+    &lt;div style={{ padding: 8 }}&gt;
+      &lt;Row label=&quot;Hierarchy&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;Primary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;Secondary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--destructive&quot;&gt;Destructive&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Small (.btn--sm)&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--sm&quot;&gt;Primary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--sm&quot;&gt;Secondary&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;With leading icon&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconPlus /&gt;&lt;/span&gt;Add Users &amp;amp; Groups&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconImport /&gt;&lt;/span&gt;Import&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Disabled&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; disabled&gt;Primary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot; disabled&gt;Secondary&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Block (.btn--block, fills its row)&quot;&gt;
+        &lt;div style={{ display: &#39;flex&#39;, gap: 12, width: 360 }}&gt;
+          &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--block&quot;&gt;Back to wizard&lt;/button&gt;
+          &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--block&quot;&gt;Discard and leave&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Table icon buttons (.icon-btn--table)&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Edit&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconEdit /&gt;&lt;/span&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Confirm&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconCheckCircle /&gt;&lt;/span&gt;&lt;/button&gt;
+      &lt;/Row&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconCheckCircle, IconEdit, IconImport, IconPlus } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Variants</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Variants = () =&gt; (
+  &lt;div style={{ padding: 8 }}&gt;
+    &lt;Row label=&quot;Hierarchy&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;Primary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;Secondary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--destructive&quot;&gt;Destructive&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Small (.btn--sm)&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--sm&quot;&gt;Primary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--sm&quot;&gt;Secondary&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;With leading icon&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconPlus /&gt;&lt;/span&gt;Add Users &amp;amp; Groups&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconImport /&gt;&lt;/span&gt;Import&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Disabled&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; disabled&gt;Primary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot; disabled&gt;Secondary&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Block (.btn--block, fills its row)&quot;&gt;
+      &lt;div style={{ display: &#39;flex&#39;, gap: 12, width: 360 }}&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--block&quot;&gt;Back to wizard&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--block&quot;&gt;Discard and leave&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Table icon buttons (.icon-btn--table)&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Edit&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconEdit /&gt;&lt;/span&gt;&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Confirm&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconCheckCircle /&gt;&lt;/span&gt;&lt;/button&gt;
+    &lt;/Row&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  no-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Checkbox">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Checkbox</h2>
+      <div class="badges">
+        <label for="c-3-components-checkbox-props" class="badge ok as-toggle">2 prop types</label>
+        <label for="c-3-components-checkbox-info" class="badge info as-toggle">1 info</label>
+        <label for="c-3-components-checkbox-stories" class="badge ok as-toggle">4 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/ui/Checkbox.stories.jsx">components-checkbox · ./src/ui/Checkbox.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="c-3-components-checkbox-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-3-components-checkbox-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  <input id="c-3-components-checkbox-props" class="tg tg-props" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+        <div class="panel panel-props">
+          <div class="note ok">
+            <div class="row">
+              <span class="ex-name">Prop types <small>(react-docgen)</small></span>
+              <span class="badge ok">2 prop types</span>
+            </div>
+            <pre><code>Component: src\ui\Checkbox.jsx::default</code></pre>
+            <pre><code>Props:</code></pre>
+            <pre><code>checked?: any = false
+
+indeterminate?: any = false</code></pre>
+          </div>
+        </div>
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { Checkbox } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Unchecked</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Unchecked = () =&gt; &lt;Controlled ariaLabel=&quot;Select row&quot; checked={false} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Checked</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Checked = () =&gt; &lt;Controlled ariaLabel=&quot;Select row&quot; checked /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Indeterminate</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Indeterminate = () =&gt; &lt;Controlled ariaLabel=&quot;Select row&quot; checked={false} indeterminate /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All States</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllStates = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, gap: 24, alignItems: &#39;center&#39; }}&gt;
+    &lt;Controlled ariaLabel=&quot;Unchecked&quot; /&gt;
+    &lt;Controlled checked ariaLabel=&quot;Checked&quot; /&gt;
+    &lt;Controlled indeterminate ariaLabel=&quot;Indeterminate&quot; /&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Chip">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Chip</h2>
+      <div class="badges">
+        <label for="c-4-design-system-chip-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-4-design-system-chip-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-4-design-system-chip-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Chip.stories.jsx">design-system-chip · ./src/stories/Chip.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-4-design-system-chip-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-4-design-system-chip-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-4-design-system-chip-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  3 | // Figma: UI kit → Chip. Implemented as `.chip` / `.chip--active` in wizard.css,
+  4 | // used as the All / Users / Groups filter in the Add Users &amp; Groups modal.
+&gt; 5 | const meta = {
+    | ^
+  6 |   title: &#39;Design System/Chip&#39;,
+  7 |   parameters: { layout: &#39;padded&#39; },
+  8 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Chip.stories.jsx:
+import React, { useState } from &#39;react&#39;;
+
+// Figma: UI kit → Chip. Implemented as `.chip` / `.chip--active` in wizard.css,
+// used as the All / Users / Groups filter in the Add Users &amp; Groups modal.
+const meta = {
+  title: &#39;Design System/Chip&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+export const Static = {
+  render: () =&gt; (
+    &lt;div className=&quot;chip-group&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;chip chip--active&quot;&gt;All&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Users&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Groups&lt;/button&gt;
+    &lt;/div&gt;
+  ),
+};
+
+export const Interactive = {
+  render: () =&gt; {
+    const [active, setActive] = useState(&#39;all&#39;);
+    return (
+      &lt;div className=&quot;chip-group&quot;&gt;
+        {[[&#39;all&#39;, &#39;All&#39;], [&#39;user&#39;, &#39;Users&#39;], [&#39;group&#39;, &#39;Groups&#39;]].map(([k, lbl]) =&gt; (
+          &lt;button key={k} type=&quot;button&quot; className={&#39;chip&#39; + (active === k ? &#39; chip--active&#39; : &#39;&#39;)} onClick={() =&gt; setActive(k)}&gt;{lbl}&lt;/button&gt;
+        ))}
+      &lt;/div&gt;
+    );
+  },
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Chip } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Static</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Static = () =&gt; (
+  &lt;div className=&quot;chip-group&quot;&gt;
+    &lt;button type=&quot;button&quot; className=&quot;chip chip--active&quot;&gt;All&lt;/button&gt;
+    &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Users&lt;/button&gt;
+    &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Groups&lt;/button&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Interactive</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Interactive = () =&gt; {
+  const [active, setActive] = useState(&#39;all&#39;);
+  return (
+    &lt;div className=&quot;chip-group&quot;&gt;
+      {[[&#39;all&#39;, &#39;All&#39;], [&#39;user&#39;, &#39;Users&#39;], [&#39;group&#39;, &#39;Groups&#39;]].map(([k, lbl]) =&gt; (
+        &lt;button key={k} type=&quot;button&quot; className={&#39;chip&#39; + (active === k ? &#39; chip--active&#39; : &#39;&#39;)} onClick={() =&gt; setActive(k)}&gt;{lbl}&lt;/button&gt;
+      ))}
+    &lt;/div&gt;
+  );
+};</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Colors">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Colors</h2>
+      <div class="badges">
+        <label for="c-5-foundations-colors-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-5-foundations-colors-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-5-foundations-colors-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Colors.stories.jsx">foundations-colors · ./src/stories/Colors.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-5-foundations-colors-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-5-foundations-colors-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-5-foundations-colors-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  1 | import React from &#39;react&#39;;
+  2 |
+&gt; 3 | const meta = {
+    | ^
+  4 |   title: &#39;Foundations/Colors&#39;,
+  5 |   parameters: { layout: &#39;fullscreen&#39; },
+  6 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Colors.stories.jsx:
+import React from &#39;react&#39;;
+
+const meta = {
+  title: &#39;Foundations/Colors&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const GROUPS = [
+  {
+    name: &#39;Text&#39;,
+    tokens: [&#39;--text-primary&#39;, &#39;--text-primary-2&#39;, &#39;--text-secondary&#39;, &#39;--text-secondary-hover&#39;,
+      &#39;--text-tertiary&#39;, &#39;--text-tertiary-2&#39;, &#39;--text-quaternary&#39;, &#39;--text-placeholder&#39;,
+      &#39;--text-brand-link&#39;, &#39;--text-white&#39;],
+  },
+  {
+    name: &#39;Background&#39;,
+    tokens: [&#39;--bg-primary&#39;, &#39;--bg-secondary&#39;, &#39;--bg-tertiary&#39;, &#39;--bg-active&#39;, &#39;--bg-primary-hover&#39;,
+      &#39;--bg-error-secondary&#39;, &#39;--bg-error-solid&#39;, &#39;--bg-brand-solid&#39;, &#39;--bg-overlay&#39;],
+  },
+  {
+    name: &#39;Border&#39;,
+    tokens: [&#39;--border-primary&#39;, &#39;--border-primary-2&#39;, &#39;--border-secondary&#39;, &#39;--border-card&#39;, &#39;--border-tertiary&#39;],
+  },
+  {
+    name: &#39;Foreground (icons)&#39;,
+    tokens: [&#39;--fg-brand&#39;, &#39;--fg-secondary&#39;, &#39;--fg-tertiary&#39;, &#39;--fg-quaternary&#39;, &#39;--fg-quinary&#39;,
+      &#39;--fg-error&#39;, &#39;--fg-warning&#39;, &#39;--brand-200&#39;],
+  },
+];
+
+function Swatch({ token }) {
+  return (
+    &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 8 }}&gt;
+      &lt;div style={{
+        height: 64, borderRadius: &#39;var(--radius-md)&#39;, background: `var(${token})`,
+        border: &#39;1px solid var(--border-card)&#39;, boxShadow: &#39;var(--shadow-xs)&#39;,
+      }} /&gt;
+      &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{token}&lt;/code&gt;
+    &lt;/div&gt;
+  );
+}
+
+export const Palette = {
+  render: () =&gt; (
+    &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39; }}&gt;
+      {GROUPS.map((g) =&gt; (
+        &lt;section key={g.name} style={{ marginBottom: 40 }}&gt;
+          &lt;h3 className=&quot;t-lg-semibold&quot; style={{ marginBottom: 16, color: &#39;var(--text-primary)&#39; }}&gt;{g.name}&lt;/h3&gt;
+          &lt;div style={{ display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(160px, 1fr))&#39;, gap: 20 }}&gt;
+            {g.tokens.map((t) =&gt; &lt;Swatch key={t} token={t} /&gt;)}
+          &lt;/div&gt;
+        &lt;/section&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Colors } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Palette</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Palette = () =&gt; (
+  &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39; }}&gt;
+    {GROUPS.map((g) =&gt; (
+      &lt;section key={g.name} style={{ marginBottom: 40 }}&gt;
+        &lt;h3 className=&quot;t-lg-semibold&quot; style={{ marginBottom: 16, color: &#39;var(--text-primary)&#39; }}&gt;{g.name}&lt;/h3&gt;
+        &lt;div style={{ display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(160px, 1fr))&#39;, gap: 20 }}&gt;
+          {g.tokens.map((t) =&gt; &lt;Swatch key={t} token={t} /&gt;)}
+        &lt;/div&gt;
+      &lt;/section&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Featuredicon">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Featuredicon</h2>
+      <div class="badges">
+        <label for="c-6-design-system-featured-icon-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-6-design-system-featured-icon-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-6-design-system-featured-icon-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/FeaturedIcon.stories.jsx">design-system-featured-icon · ./src/stories/FeaturedIcon.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-6-design-system-featured-icon-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-6-design-system-featured-icon-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-6-design-system-featured-icon-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+   5 | // Figma: UI kit → Featured icon. Implemented as `.featured-icon` with the
+   6 | // `--gray` / `--warning` / `--error` color variants (components.css + wizard.css).
+&gt;  7 | const meta = {
+     | ^
+   8 |   title: &#39;Design System/Featured icon&#39;,
+   9 |   parameters: { layout: &#39;padded&#39; },
+  10 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/FeaturedIcon.stories.jsx:
+import React from &#39;react&#39;;
+import { IconWarning, IconSignOutLarge } from &#39;../ui/icons.jsx&#39;;
+import { IconUsersGroup } from &#39;../ui/wizard-icons.jsx&#39;;
+
+// Figma: UI kit → Featured icon. Implemented as `.featured-icon` with the
+// `--gray` / `--warning` / `--error` color variants (components.css + wizard.css).
+const meta = {
+  title: &#39;Design System/Featured icon&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Item = ({ variant, Icon, size = 24, note }) =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, alignItems: &#39;center&#39;, gap: 8 }}&gt;
+    &lt;span className={&#39;featured-icon featured-icon--&#39; + variant}&gt;
+      &lt;span className={&#39;icon-box icon-&#39; + size}&gt;&lt;Icon /&gt;&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;--{variant}&lt;/code&gt;
+    {note &amp;&amp; &lt;span style={{ fontSize: 11, color: &#39;var(--text-quaternary)&#39; }}&gt;{note}&lt;/span&gt;}
+  &lt;/div&gt;
+);
+
+export const Variants = {
+  render: () =&gt; (
+    &lt;div style={{ display: &#39;flex&#39;, gap: 40 }}&gt;
+      &lt;Item variant=&quot;gray&quot; Icon={IconUsersGroup} size={20} note=&quot;empty states&quot; /&gt;
+      &lt;Item variant=&quot;warning&quot; Icon={IconWarning} note=&quot;Leave wizard?&quot; /&gt;
+      &lt;Item variant=&quot;error&quot; Icon={IconSignOutLarge} note=&quot;Log out&quot; /&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Featuredicon } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Variants</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Variants = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, gap: 40 }}&gt;
+    &lt;Item variant=&quot;gray&quot; Icon={IconUsersGroup} size={20} note=&quot;empty states&quot; /&gt;
+    &lt;Item variant=&quot;warning&quot; Icon={IconWarning} note=&quot;Leave wizard?&quot; /&gt;
+    &lt;Item variant=&quot;error&quot; Icon={IconSignOutLarge} note=&quot;Log out&quot; /&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Flags">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Flags</h2>
+      <div class="badges">
+        <label for="c-7-foundations-flags-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-7-foundations-flags-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-7-foundations-flags-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Flags.stories.jsx">foundations-flags · ./src/stories/Flags.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-7-foundations-flags-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-7-foundations-flags-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-7-foundations-flags-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  2 | import * as Flags from &#39;../ui/Flags.jsx&#39;;
+  3 |
+&gt; 4 | const meta = {
+    | ^
+  5 |   title: &#39;Foundations/Flags&#39;,
+  6 |   parameters: {
+  7 |     layout: &#39;fullscreen&#39;,
+
+./src/stories/Flags.stories.jsx:
+import React from &#39;react&#39;;
+import * as Flags from &#39;../ui/Flags.jsx&#39;;
+
+const meta = {
+  title: &#39;Foundations/Flags&#39;,
+  parameters: {
+    layout: &#39;fullscreen&#39;,
+    docs: { description: { component: &#39;National flags used by the language switcher, rendered at the 20×15 footprint.&#39; } },
+  },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const entries = Object.entries(Flags).filter(([name, v]) =&gt; name.startsWith(&#39;Flag&#39;) &amp;&amp; typeof v === &#39;function&#39;);
+
+export const AllFlags = {
+  render: () =&gt; (
+    &lt;div style={{
+      padding: 32, background: &#39;var(--bg-primary)&#39;,
+      display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(120px, 1fr))&#39;, gap: 16,
+    }}&gt;
+      {entries.map(([name, Flag]) =&gt; (
+        &lt;div key={name} style={{
+          display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 10,
+          padding: 12, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+        }}&gt;
+          &lt;Flag /&gt;
+          &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Flags } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Flags</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllFlags = () =&gt; (
+  &lt;div style={{
+    padding: 32, background: &#39;var(--bg-primary)&#39;,
+    display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(120px, 1fr))&#39;, gap: 16,
+  }}&gt;
+    {entries.map(([name, Flag]) =&gt; (
+      &lt;div key={name} style={{
+        display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 10,
+        padding: 12, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+      }}&gt;
+        &lt;Flag /&gt;
+        &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Icons">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Icons</h2>
+      <div class="badges">
+        <label for="c-8-foundations-icons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-8-foundations-icons-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-8-foundations-icons-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Icons.stories.jsx">foundations-icons · ./src/stories/Icons.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-8-foundations-icons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-8-foundations-icons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-8-foundations-icons-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  2 | import * as Icons from &#39;../ui/icons.jsx&#39;;
+  3 |
+&gt; 4 | const meta = {
+    | ^
+  5 |   title: &#39;Foundations/Icons&#39;,
+  6 |   parameters: { layout: &#39;fullscreen&#39; },
+  7 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Icons.stories.jsx:
+import React from &#39;react&#39;;
+import * as Icons from &#39;../ui/icons.jsx&#39;;
+
+const meta = {
+  title: &#39;Foundations/Icons&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const entries = Object.entries(Icons).filter(([, v]) =&gt; typeof v === &#39;function&#39;);
+
+export const AllIcons = {
+  render: () =&gt; (
+    &lt;div style={{
+      padding: 32, background: &#39;var(--bg-primary)&#39;,
+      display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(140px, 1fr))&#39;, gap: 12,
+    }}&gt;
+      {entries.map(([name, Icon]) =&gt; (
+        &lt;div key={name} style={{
+          display: &#39;flex&#39;, flexDirection: &#39;column&#39;, alignItems: &#39;center&#39;, gap: 10,
+          padding: &#39;18px 12px&#39;, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+          color: &#39;var(--fg-secondary)&#39;,
+        }}&gt;
+          &lt;span className=&quot;icon-box icon-20&quot; style={{ width: 24, height: 24 }}&gt;&lt;Icon /&gt;&lt;/span&gt;
+          &lt;code style={{ fontSize: 11, color: &#39;var(--text-tertiary)&#39;, textAlign: &#39;center&#39;, wordBreak: &#39;break-word&#39; }}&gt;{name}&lt;/code&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Icons } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Icons</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllIcons = () =&gt; (
+  &lt;div style={{
+    padding: 32, background: &#39;var(--bg-primary)&#39;,
+    display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(140px, 1fr))&#39;, gap: 12,
+  }}&gt;
+    {entries.map(([name, Icon]) =&gt; (
+      &lt;div key={name} style={{
+        display: &#39;flex&#39;, flexDirection: &#39;column&#39;, alignItems: &#39;center&#39;, gap: 10,
+        padding: &#39;18px 12px&#39;, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+        color: &#39;var(--fg-secondary)&#39;,
+      }}&gt;
+        &lt;span className=&quot;icon-box icon-20&quot; style={{ width: 24, height: 24 }}&gt;&lt;Icon /&gt;&lt;/span&gt;
+        &lt;code style={{ fontSize: 11, color: &#39;var(--text-tertiary)&#39;, textAlign: &#39;center&#39;, wordBreak: &#39;break-word&#39; }}&gt;{name}&lt;/code&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Infobanner">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Infobanner</h2>
+      <div class="badges">
+        <label for="c-9-design-system-info-banner-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-9-design-system-info-banner-info" class="badge info as-toggle">1 info</label>
+        <label for="c-9-design-system-info-banner-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/InfoBanner.stories.jsx">design-system-info-banner · ./src/stories/InfoBanner.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-9-design-system-info-banner-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-9-design-system-info-banner-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-9-design-system-info-banner-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Notifications (Minor notification). Implemented as
+  5 | // `.info-banner` in wizard.css, shown in the Users &amp; Groups step.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Info banner&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/InfoBanner.stories.jsx:
+import React from &#39;react&#39;;
+import { IconInfo } from &#39;../ui/wizard-icons.jsx&#39;;
+
+// Figma: UI kit → Notifications (Minor notification). Implemented as
+// `.info-banner` in wizard.css, shown in the Users &amp; Groups step.
+const meta = {
+  title: &#39;Design System/Info banner&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+export const Default = {
+  render: () =&gt; (
+    &lt;div className=&quot;info-banner&quot; style={{ maxWidth: 640 }}&gt;
+      &lt;span className=&quot;icon-box icon-20 info-banner__icon&quot;&gt;&lt;IconInfo /&gt;&lt;/span&gt;
+      &lt;span className=&quot;t-sm-regular&quot;&gt;New shares will be available to currently logged in users after logoff / login&lt;/span&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconInfo } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; (
+  &lt;div className=&quot;info-banner&quot; style={{ maxWidth: 640 }}&gt;
+    &lt;span className=&quot;icon-box icon-20 info-banner__icon&quot;&gt;&lt;IconInfo /&gt;&lt;/span&gt;
+    &lt;span className=&quot;t-sm-regular&quot;&gt;New shares will be available to currently logged in users after logoff / login&lt;/span&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Modals">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Modals</h2>
+      <div class="badges">
+        <label for="c-10-components-modals-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-10-components-modals-info" class="badge info as-toggle">1 info</label>
+        <label for="c-10-components-modals-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Modals.stories.jsx">components-modals · ./src/stories/Modals.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-10-components-modals-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-10-components-modals-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-10-components-modals-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+   6 | // (small, `.modal`) and AddUsersModal (`.modal--wide`, shown in its own story via
+   7 | // the Users &amp; Groups step). These render the two small confirmation modals.
+&gt;  8 | const meta = {
+     | ^
+   9 |   title: &#39;Components/Modals&#39;,
+  10 |   parameters: { layout: &#39;fullscreen&#39; },
+  11 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Modals.stories.jsx:
+import React, { useState } from &#39;react&#39;;
+import LeaveWizardModal from &#39;../layout/LeaveWizardModal.jsx&#39;;
+import LogoutModal from &#39;../layout/LogoutModal.jsx&#39;;
+
+// Figma: UI kit → Modals. The app ships three: LeaveWizardModal and LogoutModal
+// (small, `.modal`) and AddUsersModal (`.modal--wide`, shown in its own story via
+// the Users &amp; Groups step). These render the two small confirmation modals.
+const meta = {
+  title: &#39;Components/Modals&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+  decorators: [(Story) =&gt; &lt;div style={{ minHeight: 420, position: &#39;relative&#39; }}&gt;&lt;Story /&gt;&lt;/div&gt;],
+};
+export default meta;
+
+export const LeaveWizard = {
+  render: () =&gt; {
+    const [open, setOpen] = useState(true);
+    return (
+      &lt;&gt;
+        {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+        &lt;LeaveWizardModal open={open} targetLabel=&quot;Settings&quot; onStay={() =&gt; setOpen(false)} onLeave={() =&gt; setOpen(false)} /&gt;
+      &lt;/&gt;
+    );
+  },
+};
+
+export const Logout = {
+  render: () =&gt; {
+    const [open, setOpen] = useState(true);
+    return (
+      &lt;&gt;
+        {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+        &lt;LogoutModal open={open} onCancel={() =&gt; setOpen(false)} onConfirm={() =&gt; setOpen(false)} /&gt;
+      &lt;/&gt;
+    );
+  },
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { LeaveWizardModal, LogoutModal } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Leave Wizard</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const LeaveWizard = () =&gt; {
+  const [open, setOpen] = useState(true);
+  return (
+    &lt;&gt;
+      {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+      &lt;LeaveWizardModal open={open} targetLabel=&quot;Settings&quot; onStay={() =&gt; setOpen(false)} onLeave={() =&gt; setOpen(false)} /&gt;
+    &lt;/&gt;
+  );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Logout</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Logout = () =&gt; {
+  const [open, setOpen] = useState(true);
+  return (
+    &lt;&gt;
+      {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+      &lt;LogoutModal open={open} onCancel={() =&gt; setOpen(false)} onConfirm={() =&gt; setOpen(false)} /&gt;
+    &lt;/&gt;
+  );
+};</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  no-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Pagination">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Pagination</h2>
+      <div class="badges">
+        
+        <label for="c-11-components-pagination-info" class="badge info as-toggle">1 info</label>
+        <label for="c-11-components-pagination-stories" class="badge ok as-toggle">3 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/ui/Pagination.stories.jsx">components-pagination · ./src/ui/Pagination.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="c-11-components-pagination-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-11-components-pagination-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { Pagination } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; &lt;Controlled rows={10} page={1} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Middle Page</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const MiddlePage = () =&gt; &lt;Controlled rows={10} page={3} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Last Page</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const LastPage = () =&gt; &lt;Controlled rows={10} page={10} /&gt;;</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Searchfield">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Searchfield</h2>
+      <div class="badges">
+        <label for="c-12-design-system-search-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-12-design-system-search-field-info" class="badge info as-toggle">1 info</label>
+        <label for="c-12-design-system-search-field-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/SearchField.stories.jsx">design-system-search-field · ./src/stories/SearchField.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-12-design-system-search-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-12-design-system-search-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-12-design-system-search-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Inputs (search variant). Implemented as `.field` /
+  5 | // `.field--search` with a leading `.field__icon` in components.css.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Search field&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/SearchField.stories.jsx:
+import React from &#39;react&#39;;
+import { IconSearch } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Inputs (search variant). Implemented as `.field` /
+// `.field--search` with a leading `.field__icon` in components.css.
+const meta = {
+  title: &#39;Design System/Search field&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Search = ({ disabled, defaultValue, width }) =&gt; (
+  &lt;div className=&quot;field field--search&quot; style={{ width }}&gt;
+    &lt;span className=&quot;icon-box icon-24 field__icon&quot;&gt;&lt;IconSearch /&gt;&lt;/span&gt;
+    &lt;input className=&quot;field__input t-md-regular&quot; placeholder=&quot;Search&quot; defaultValue={defaultValue} disabled={disabled} aria-label=&quot;Search&quot; /&gt;
+  &lt;/div&gt;
+);
+
+export const States = {
+  render: () =&gt; (
+    &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 20 }}&gt;
+      &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Default&lt;/div&gt;&lt;Search /&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;With value&lt;/div&gt;&lt;Search defaultValue=&quot;Backup&quot; /&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Disabled (empty assigned list)&lt;/div&gt;&lt;Search disabled /&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconSearch } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">States</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const States = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 20 }}&gt;
+    &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Default&lt;/div&gt;&lt;Search /&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;With value&lt;/div&gt;&lt;Search defaultValue=&quot;Backup&quot; /&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Disabled (empty assigned list)&lt;/div&gt;&lt;Search disabled /&gt;&lt;/div&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Select">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Select</h2>
+      <div class="badges">
+        <label for="c-13-design-system-select-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-13-design-system-select-info" class="badge info as-toggle">1 info</label>
+        <label for="c-13-design-system-select-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Select.stories.jsx">design-system-select · ./src/stories/Select.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-13-design-system-select-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-13-design-system-select-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-13-design-system-select-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Input dropdowns (Input dropdown). Implemented as the native
+  5 | // `.select` wrapper with `.select__native` + `.select__chevron` in wizard.css.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Select&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Select.stories.jsx:
+import React from &#39;react&#39;;
+import { IconChevronDown } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Input dropdowns (Input dropdown). Implemented as the native
+// `.select` wrapper with `.select__native` + `.select__chevron` in wizard.css.
+const meta = {
+  title: &#39;Design System/Select&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const NativeSelect = ({ className, options, error }) =&gt; (
+  &lt;div className={&#39;select &#39; + className}&gt;
+    &lt;select className={&#39;select__native t-md-regular&#39; + (error ? &#39; is-error&#39; : &#39;&#39;)} defaultValue={options[0]}&gt;
+      {options.map((o) =&gt; &lt;option key={o} value={o}&gt;{o}&lt;/option&gt;)}
+    &lt;/select&gt;
+    &lt;span className=&quot;icon-box icon-20 select__chevron&quot;&gt;&lt;IconChevronDown /&gt;&lt;/span&gt;
+  &lt;/div&gt;
+);
+
+const Field = ({ label, children }) =&gt; (
+  &lt;div className=&quot;form-field&quot; style={{ marginBottom: 24 }}&gt;
+    &lt;label className=&quot;t-sm-semibold form-label&quot;&gt;{label}&lt;/label&gt;
+    {children}
+  &lt;/div&gt;
+);
+
+export const Variants = {
+  render: () =&gt; (
+    &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+      &lt;Field label=&quot;Small (.select--sm) — drive letter&quot;&gt;
+        &lt;NativeSelect className=&quot;select--sm&quot; options={[&#39;M:&#39;, &#39;N:&#39;, &#39;O:&#39;, &#39;P:&#39;]} /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Full width (.select--full) — S3 region&quot;&gt;
+        &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;us-east-1&#39;, &#39;us-west-2&#39;, &#39;eu-west-1&#39;]} /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Error state (.is-error)&quot;&gt;
+        &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;Select region&#39;, &#39;us-east-1&#39;]} error /&gt;
+      &lt;/Field&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconChevronDown } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Variants</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Variants = () =&gt; (
+  &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+    &lt;Field label=&quot;Small (.select--sm) — drive letter&quot;&gt;
+      &lt;NativeSelect className=&quot;select--sm&quot; options={[&#39;M:&#39;, &#39;N:&#39;, &#39;O:&#39;, &#39;P:&#39;]} /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Full width (.select--full) — S3 region&quot;&gt;
+      &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;us-east-1&#39;, &#39;us-west-2&#39;, &#39;eu-west-1&#39;]} /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Error state (.is-error)&quot;&gt;
+      &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;Select region&#39;, &#39;us-east-1&#39;]} error /&gt;
+    &lt;/Field&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  no-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Stepper">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Stepper</h2>
+      <div class="badges">
+        
+        <label for="c-14-components-stepper-info" class="badge info as-toggle">1 info</label>
+        <label for="c-14-components-stepper-stories" class="badge ok as-toggle">4 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/pages/addshare/Stepper.stories.jsx">components-stepper · ./src/pages/addshare/Stepper.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="c-14-components-stepper-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-14-components-stepper-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { Stepper } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; &lt;Stepper current={2} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Interactive</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Interactive = () =&gt; {
+  const [current, setCurrent] = useState(2);
+  return &lt;Stepper current={current} onStepClick={setCurrent} /&gt;;
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">First Step</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const FirstStep = () =&gt; &lt;Stepper current={0} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Last Step</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const LastStep = () =&gt; &lt;Stepper current={5} /&gt;;</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Storagelogos">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Storagelogos</h2>
+      <div class="badges">
+        <label for="c-15-foundations-storage-logos-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-15-foundations-storage-logos-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-15-foundations-storage-logos-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/StorageLogos.stories.jsx">foundations-storage-logos · ./src/stories/StorageLogos.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-15-foundations-storage-logos-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-15-foundations-storage-logos-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-15-foundations-storage-logos-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  2 | import * as Logos from &#39;../ui/logos.jsx&#39;;
+  3 |
+&gt; 4 | const meta = {
+    | ^
+  5 |   title: &#39;Foundations/Storage logos&#39;,
+  6 |   parameters: { layout: &#39;fullscreen&#39; },
+  7 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/StorageLogos.stories.jsx:
+import React from &#39;react&#39;;
+import * as Logos from &#39;../ui/logos.jsx&#39;;
+
+const meta = {
+  title: &#39;Foundations/Storage logos&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const entries = Object.entries(Logos).filter(([, v]) =&gt; typeof v === &#39;function&#39;);
+
+export const AllLogos = {
+  render: () =&gt; (
+    &lt;div style={{
+      padding: 32, background: &#39;var(--bg-primary)&#39;,
+      display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(180px, 1fr))&#39;, gap: 16,
+    }}&gt;
+      {entries.map(([name, Logo]) =&gt; (
+        &lt;div key={name} style={{
+          display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 12,
+          padding: 16, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+        }}&gt;
+          &lt;span className=&quot;icon-box&quot; style={{ width: 32, height: 32 }}&gt;&lt;Logo /&gt;&lt;/span&gt;
+          &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Storagelogos } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Logos</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllLogos = () =&gt; (
+  &lt;div style={{
+    padding: 32, background: &#39;var(--bg-primary)&#39;,
+    display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(180px, 1fr))&#39;, gap: 16,
+  }}&gt;
+    {entries.map(([name, Logo]) =&gt; (
+      &lt;div key={name} style={{
+        display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 12,
+        padding: 16, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+      }}&gt;
+        &lt;span className=&quot;icon-box&quot; style={{ width: 32, height: 32 }}&gt;&lt;Logo /&gt;&lt;/span&gt;
+        &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Textfield">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Textfield</h2>
+      <div class="badges">
+        <label for="c-16-design-system-text-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-16-design-system-text-field-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-16-design-system-text-field-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/TextField.stories.jsx">design-system-text-field · ./src/stories/TextField.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-16-design-system-text-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-16-design-system-text-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-16-design-system-text-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  3 | // Figma: UI kit → Inputs (Input field). Implemented as `.text-input` with
+  4 | // `.form-field` / `.form-label` / `.field-hint` / `.field-error` in wizard.css.
+&gt; 5 | const meta = {
+    | ^
+  6 |   title: &#39;Design System/Text field&#39;,
+  7 |   parameters: { layout: &#39;padded&#39; },
+  8 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/TextField.stories.jsx:
+import React from &#39;react&#39;;
+
+// Figma: UI kit → Inputs (Input field). Implemented as `.text-input` with
+// `.form-field` / `.form-label` / `.field-hint` / `.field-error` in wizard.css.
+const meta = {
+  title: &#39;Design System/Text field&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Field = ({ label, required, hint, error, children }) =&gt; (
+  &lt;div className=&quot;form-field&quot; style={{ marginBottom: 24 }}&gt;
+    &lt;label className=&quot;t-sm-semibold form-label&quot;&gt;{label} {required &amp;&amp; &lt;span className=&quot;req&quot;&gt;*&lt;/span&gt;}&lt;/label&gt;
+    {children}
+    {error
+      ? &lt;p className=&quot;t-sm-regular field-error&quot;&gt;{error}&lt;/p&gt;
+      : hint &amp;&amp; &lt;p className=&quot;t-sm-regular field-hint&quot;&gt;{hint}&lt;/p&gt;}
+  &lt;/div&gt;
+);
+
+export const States = {
+  render: () =&gt; (
+    &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+      &lt;Field label=&quot;Empty (placeholder)&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;\\mwf\network-share&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Filled&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; defaultValue=&quot;Analytics bucket&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;With hint&quot; hint=&quot;Primary or secondary key from the storage account.&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Enter a value&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Required, error&quot; required error=&quot;Bucket name is required.&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular is-error&quot; placeholder=&quot;my-bucket&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Password (masked)&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; type=&quot;password&quot; defaultValue=&quot;secretvalue&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Disabled&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Disabled&quot; disabled /&gt;
+      &lt;/Field&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Textfield } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">States</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const States = () =&gt; (
+  &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+    &lt;Field label=&quot;Empty (placeholder)&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;\\mwf\network-share&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Filled&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; defaultValue=&quot;Analytics bucket&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;With hint&quot; hint=&quot;Primary or secondary key from the storage account.&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Enter a value&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Required, error&quot; required error=&quot;Bucket name is required.&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular is-error&quot; placeholder=&quot;my-bucket&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Password (masked)&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; type=&quot;password&quot; defaultValue=&quot;secretvalue&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Disabled&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Disabled&quot; disabled /&gt;
+    &lt;/Field&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  no-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Toggle">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Toggle</h2>
+      <div class="badges">
+        
+        <label for="c-17-components-toggle-info" class="badge info as-toggle">1 info</label>
+        <label for="c-17-components-toggle-stories" class="badge ok as-toggle">3 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/ui/Toggle.stories.jsx">components-toggle · ./src/ui/Toggle.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="c-17-components-toggle-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-17-components-toggle-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { Toggle } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Off</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Off = () =&gt; &lt;Controlled ariaLabel=&quot;Toggle setting&quot; checked={false} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">On</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const On = () =&gt; &lt;Controlled ariaLabel=&quot;Toggle setting&quot; checked /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Both</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Both = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, gap: 24, alignItems: &#39;center&#39; }}&gt;
+    &lt;Controlled checked={false} ariaLabel=&quot;Off&quot; /&gt;
+    &lt;Controlled checked ariaLabel=&quot;On&quot; /&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  no-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Tooltip">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-ok"></span> Tooltip</h2>
+      <div class="badges">
+        <label for="c-18-components-tooltip-props" class="badge ok as-toggle">1 prop type</label>
+        <label for="c-18-components-tooltip-info" class="badge info as-toggle">1 info</label>
+        <label for="c-18-components-tooltip-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/ui/Tooltip.stories.jsx">components-tooltip · ./src/ui/Tooltip.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  
+  <input id="c-18-components-tooltip-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-18-components-tooltip-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  <input id="c-18-components-tooltip-props" class="tg tg-props" type="checkbox" hidden />
+
+  <div class="panels">
+    
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+        <div class="panel panel-props">
+          <div class="note ok">
+            <div class="row">
+              <span class="ex-name">Prop types <small>(react-docgen)</small></span>
+              <span class="badge ok">1 prop type</span>
+            </div>
+            <pre><code>Component: src\ui\Tooltip.jsx::default</code></pre>
+            <pre><code>Props:</code></pre>
+            <pre><code>placement?: any = &#39;right&#39;</code></pre>
+          </div>
+        </div>
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconQuestionCircle, Tooltip } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; &lt;div style={{ padding: 80 }}&gt;
+    &lt;Tooltip label=&quot;Guest access is disabled in Settings&quot; placement=&quot;right&quot;&gt;
+        &lt;Trigger /&gt;
+    &lt;/Tooltip&gt;
+&lt;/div&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Placements</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Placements = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, gap: 96, padding: 80 }}&gt;
+    {[&#39;right&#39;, &#39;left&#39;, &#39;top&#39;, &#39;bottom&#39;].map((p) =&gt; (
+      &lt;Tooltip key={p} label={`Placement: ${p}`} placement={p}&gt;
+        &lt;Trigger /&gt;
+      &lt;/Tooltip&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Typography">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Typography</h2>
+      <div class="badges">
+        <label for="c-19-foundations-typography-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-19-foundations-typography-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-19-foundations-typography-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Typography.stories.jsx">foundations-typography · ./src/stories/Typography.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-19-foundations-typography-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-19-foundations-typography-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-19-foundations-typography-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  1 | import React from &#39;react&#39;;
+  2 |
+&gt; 3 | const meta = {
+    | ^
+  4 |   title: &#39;Foundations/Typography&#39;,
+  5 |   parameters: { layout: &#39;fullscreen&#39; },
+  6 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Typography.stories.jsx:
+import React from &#39;react&#39;;
+
+const meta = {
+  title: &#39;Foundations/Typography&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const STYLES = [
+  { cls: &#39;t-display-xs-semibold&#39;, use: &#39;Page &amp; step titles&#39; },
+  { cls: &#39;t-lg-semibold&#39;, use: &#39;Section headings&#39; },
+  { cls: &#39;t-md-semibold&#39;, use: &#39;Card titles, emphasis&#39; },
+  { cls: &#39;t-md-regular&#39;, use: &#39;Body copy, inputs&#39; },
+  { cls: &#39;t-sm-semibold&#39;, use: &#39;Labels, active page&#39; },
+  { cls: &#39;t-sm-regular&#39;, use: &#39;Secondary text, hints&#39; },
+  { cls: &#39;t-xs-semibold&#39;, use: &#39;Table headers, badges, tooltips&#39; },
+];
+
+export const Scale = {
+  render: () =&gt; (
+    &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39;, display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 28 }}&gt;
+      {STYLES.map((s) =&gt; (
+        &lt;div key={s.cls} style={{ borderBottom: &#39;1px solid var(--border-secondary)&#39;, paddingBottom: 20 }}&gt;
+          &lt;div className={s.cls} style={{ color: &#39;var(--text-primary-2)&#39; }}&gt;
+            The quick brown fox jumps over the lazy dog
+          &lt;/div&gt;
+          &lt;div style={{ marginTop: 8, display: &#39;flex&#39;, gap: 16 }}&gt;
+            &lt;code style={{ fontSize: 12, color: &#39;var(--text-brand-link)&#39; }}&gt;.{s.cls}&lt;/code&gt;
+            &lt;span style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{s.use}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Typography } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Scale</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Scale = () =&gt; (
+  &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39;, display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 28 }}&gt;
+    {STYLES.map((s) =&gt; (
+      &lt;div key={s.cls} style={{ borderBottom: &#39;1px solid var(--border-secondary)&#39;, paddingBottom: 20 }}&gt;
+        &lt;div className={s.cls} style={{ color: &#39;var(--text-primary-2)&#39; }}&gt;
+          The quick brown fox jumps over the lazy dog
+        &lt;/div&gt;
+        &lt;div style={{ marginTop: 8, display: &#39;flex&#39;, gap: 16 }}&gt;
+          &lt;code style={{ fontSize: 12, color: &#39;var(--text-brand-link)&#39; }}&gt;.{s.cls}&lt;/code&gt;
+          &lt;span style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{s.use}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+    </div>
+    <div class="error-groups" role="region" aria-label="Prop type error groups">
+        <section class="group">
+          <input id="no-component-found-toggle" class="group-tg" type="checkbox" hidden />
+          <label for="no-component-found-toggle" class="group-header">
+            <span class="caret">▸</span>
+            <span class="group-title">No component found</span>
+            <span class="group-count">15</span>
+          </label>
+          <div class="group-cards">
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Badges">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Badges</h2>
+      <div class="badges">
+        <label for="c-error-0-design-system-badges-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-0-design-system-badges-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-0-design-system-badges-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Badges.stories.jsx">design-system-badges · ./src/stories/Badges.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-0-design-system-badges-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-0-design-system-badges-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-0-design-system-badges-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Tag / _Table badge and the status icons used in the Shares
+  5 | // table. Implemented as `.feature-badge` and `.status-icon--*` in components.css.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Badges&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Badges.stories.jsx:
+import React from &#39;react&#39;;
+import { IconGlobe, IconLockOpen, IconArrowDownload, IconDocEdit, IconErrorCircle, IconWarning } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Tag / _Table badge and the status icons used in the Shares
+// table. Implemented as `.feature-badge` and `.status-icon--*` in components.css.
+const meta = {
+  title: &#39;Design System/Badges&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const FEATURES = [
+  [&#39;globe&#39;, IconGlobe, &#39;Public sharing&#39;],
+  [&#39;lock&#39;, IconLockOpen, &#39;Lock&#39;],
+  [&#39;download&#39;, IconArrowDownload, &#39;Download&#39;],
+  [&#39;docedit&#39;, IconDocEdit, &#39;Office Online edit&#39;],
+];
+
+const Label = ({ children }) =&gt; (
+  &lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 10 }}&gt;{children}&lt;/div&gt;
+);
+
+export const FeatureBadges = {
+  render: () =&gt; (
+    &lt;div&gt;
+      &lt;Label&gt;Feature badges (.feature-badge)&lt;/Label&gt;
+      &lt;div className=&quot;feature-badges&quot;&gt;
+        {FEATURES.map(([k, Ico]) =&gt; (
+          &lt;span key={k} className=&quot;feature-badge&quot;&gt;&lt;span className=&quot;icon-box feature-badge__icon&quot;&gt;&lt;Ico width=&quot;12&quot; height=&quot;12&quot; /&gt;&lt;/span&gt;&lt;/span&gt;
+        ))}
+      &lt;/div&gt;
+      &lt;div style={{ marginTop: 16, display: &#39;flex&#39;, gap: 16, color: &#39;var(--text-tertiary)&#39;, fontSize: 12 }}&gt;
+        {FEATURES.map(([k, , name]) =&gt; &lt;span key={k}&gt;{name}&lt;/span&gt;)}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  ),
+};
+
+export const StatusIcons = {
+  render: () =&gt; (
+    &lt;div&gt;
+      &lt;Label&gt;Status icons (.status-icon--error / --warning)&lt;/Label&gt;
+      &lt;div style={{ display: &#39;flex&#39;, gap: 24, alignItems: &#39;center&#39; }}&gt;
+        &lt;span className=&quot;icon-box icon-16 status-icon status-icon--error&quot;&gt;&lt;IconErrorCircle /&gt;&lt;/span&gt;
+        &lt;span className=&quot;icon-box icon-16 status-icon status-icon--warning&quot;&gt;&lt;IconWarning /&gt;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconErrorCircle, IconWarning } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Feature Badges</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const FeatureBadges = () =&gt; (
+  &lt;div&gt;
+    &lt;Label&gt;Feature badges (.feature-badge)&lt;/Label&gt;
+    &lt;div className=&quot;feature-badges&quot;&gt;
+      {FEATURES.map(([k, Ico]) =&gt; (
+        &lt;span key={k} className=&quot;feature-badge&quot;&gt;&lt;span className=&quot;icon-box feature-badge__icon&quot;&gt;&lt;Ico width=&quot;12&quot; height=&quot;12&quot; /&gt;&lt;/span&gt;&lt;/span&gt;
+      ))}
+    &lt;/div&gt;
+    &lt;div style={{ marginTop: 16, display: &#39;flex&#39;, gap: 16, color: &#39;var(--text-tertiary)&#39;, fontSize: 12 }}&gt;
+      {FEATURES.map(([k, , name]) =&gt; &lt;span key={k}&gt;{name}&lt;/span&gt;)}
+    &lt;/div&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Status Icons</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const StatusIcons = () =&gt; (
+  &lt;div&gt;
+    &lt;Label&gt;Status icons (.status-icon--error / --warning)&lt;/Label&gt;
+    &lt;div style={{ display: &#39;flex&#39;, gap: 24, alignItems: &#39;center&#39; }}&gt;
+      &lt;span className=&quot;icon-box icon-16 status-icon status-icon--error&quot;&gt;&lt;IconErrorCircle /&gt;&lt;/span&gt;
+      &lt;span className=&quot;icon-box icon-16 status-icon status-icon--warning&quot;&gt;&lt;IconWarning /&gt;&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Breadcrumbs">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Breadcrumbs</h2>
+      <div class="badges">
+        <label for="c-error-1-design-system-breadcrumbs-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-1-design-system-breadcrumbs-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-1-design-system-breadcrumbs-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Breadcrumbs.stories.jsx">design-system-breadcrumbs · ./src/stories/Breadcrumbs.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-1-design-system-breadcrumbs-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-1-design-system-breadcrumbs-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-1-design-system-breadcrumbs-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  3 | // Figma: UI kit → Breadcrumbs. Implemented as `.breadcrumbs` in wizard.css,
+  4 | // shown at the top of the Add new share wizard.
+&gt; 5 | const meta = {
+    | ^
+  6 |   title: &#39;Design System/Breadcrumbs&#39;,
+  7 |   parameters: { layout: &#39;padded&#39; },
+  8 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Breadcrumbs.stories.jsx:
+import React from &#39;react&#39;;
+
+// Figma: UI kit → Breadcrumbs. Implemented as `.breadcrumbs` in wizard.css,
+// shown at the top of the Add new share wizard.
+const meta = {
+  title: &#39;Design System/Breadcrumbs&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+export const Default = {
+  render: () =&gt; (
+    &lt;nav className=&quot;breadcrumbs t-md-regular&quot; aria-label=&quot;Breadcrumb&quot;&gt;
+      &lt;a href=&quot;#&quot; className=&quot;breadcrumbs__link breadcrumbs__link--muted&quot; onClick={(e) =&gt; e.preventDefault()}&gt;Shares&lt;/a&gt;
+      &lt;span className=&quot;breadcrumbs__sep&quot;&gt;›&lt;/span&gt;
+      &lt;span className=&quot;breadcrumbs__link&quot;&gt;Add new share&lt;/span&gt;
+    &lt;/nav&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Breadcrumbs } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; (
+  &lt;nav className=&quot;breadcrumbs t-md-regular&quot; aria-label=&quot;Breadcrumb&quot;&gt;
+    &lt;a href=&quot;#&quot; className=&quot;breadcrumbs__link breadcrumbs__link--muted&quot; onClick={(e) =&gt; e.preventDefault()}&gt;Shares&lt;/a&gt;
+    &lt;span className=&quot;breadcrumbs__sep&quot;&gt;›&lt;/span&gt;
+    &lt;span className=&quot;breadcrumbs__link&quot;&gt;Add new share&lt;/span&gt;
+  &lt;/nav&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Buttons">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Buttons</h2>
+      <div class="badges">
+        <label for="c-error-2-design-system-buttons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-2-design-system-buttons-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-2-design-system-buttons-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Buttons.stories.jsx">design-system-buttons · ./src/stories/Buttons.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-2-design-system-buttons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-2-design-system-buttons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-2-design-system-buttons-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+   5 | // Figma: UI kit → Buttons (Button, Button destructive). Implemented as the
+   6 | // `.btn` class family in src/styles/components.css + wizard.css (`.btn--sm`).
+&gt;  7 | const meta = {
+     | ^
+   8 |   title: &#39;Design System/Buttons&#39;,
+   9 |   parameters: { layout: &#39;padded&#39; },
+  10 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Buttons.stories.jsx:
+import React from &#39;react&#39;;
+import { IconPlus, IconImport } from &#39;../ui/wizard-icons.jsx&#39;;
+import { IconEdit, IconCheckCircle } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Buttons (Button, Button destructive). Implemented as the
+// `.btn` class family in src/styles/components.css + wizard.css (`.btn--sm`).
+const meta = {
+  title: &#39;Design System/Buttons&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Row = ({ label, children }) =&gt; (
+  &lt;div style={{ marginBottom: 28 }}&gt;
+    &lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 10 }}&gt;{label}&lt;/div&gt;
+    &lt;div style={{ display: &#39;flex&#39;, gap: 12, alignItems: &#39;center&#39;, flexWrap: &#39;wrap&#39; }}&gt;{children}&lt;/div&gt;
+  &lt;/div&gt;
+);
+
+export const Variants = {
+  render: () =&gt; (
+    &lt;div style={{ padding: 8 }}&gt;
+      &lt;Row label=&quot;Hierarchy&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;Primary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;Secondary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--destructive&quot;&gt;Destructive&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Small (.btn--sm)&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--sm&quot;&gt;Primary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--sm&quot;&gt;Secondary&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;With leading icon&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconPlus /&gt;&lt;/span&gt;Add Users &amp;amp; Groups&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconImport /&gt;&lt;/span&gt;Import&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Disabled&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; disabled&gt;Primary&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot; disabled&gt;Secondary&lt;/button&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Block (.btn--block, fills its row)&quot;&gt;
+        &lt;div style={{ display: &#39;flex&#39;, gap: 12, width: 360 }}&gt;
+          &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--block&quot;&gt;Back to wizard&lt;/button&gt;
+          &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--block&quot;&gt;Discard and leave&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/Row&gt;
+      &lt;Row label=&quot;Table icon buttons (.icon-btn--table)&quot;&gt;
+        &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Edit&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconEdit /&gt;&lt;/span&gt;&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Confirm&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconCheckCircle /&gt;&lt;/span&gt;&lt;/button&gt;
+      &lt;/Row&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconCheckCircle, IconEdit, IconImport, IconPlus } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Variants</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Variants = () =&gt; (
+  &lt;div style={{ padding: 8 }}&gt;
+    &lt;Row label=&quot;Hierarchy&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;Primary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;Secondary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--destructive&quot;&gt;Destructive&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Small (.btn--sm)&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--sm&quot;&gt;Primary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--sm&quot;&gt;Secondary&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;With leading icon&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconPlus /&gt;&lt;/span&gt;Add Users &amp;amp; Groups&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot;&gt;&lt;span className=&quot;icon-box icon-20&quot;&gt;&lt;IconImport /&gt;&lt;/span&gt;Import&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Disabled&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; disabled&gt;Primary&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary&quot; disabled&gt;Secondary&lt;/button&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Block (.btn--block, fills its row)&quot;&gt;
+      &lt;div style={{ display: &#39;flex&#39;, gap: 12, width: 360 }}&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--secondary btn--block&quot;&gt;Back to wizard&lt;/button&gt;
+        &lt;button type=&quot;button&quot; className=&quot;btn btn--primary btn--block&quot;&gt;Discard and leave&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/Row&gt;
+    &lt;Row label=&quot;Table icon buttons (.icon-btn--table)&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Edit&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconEdit /&gt;&lt;/span&gt;&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;icon-btn icon-btn--table&quot; aria-label=&quot;Confirm&quot;&gt;&lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconCheckCircle /&gt;&lt;/span&gt;&lt;/button&gt;
+    &lt;/Row&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Chip">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Chip</h2>
+      <div class="badges">
+        <label for="c-error-3-design-system-chip-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-3-design-system-chip-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-3-design-system-chip-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Chip.stories.jsx">design-system-chip · ./src/stories/Chip.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-3-design-system-chip-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-3-design-system-chip-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-3-design-system-chip-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  3 | // Figma: UI kit → Chip. Implemented as `.chip` / `.chip--active` in wizard.css,
+  4 | // used as the All / Users / Groups filter in the Add Users &amp; Groups modal.
+&gt; 5 | const meta = {
+    | ^
+  6 |   title: &#39;Design System/Chip&#39;,
+  7 |   parameters: { layout: &#39;padded&#39; },
+  8 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Chip.stories.jsx:
+import React, { useState } from &#39;react&#39;;
+
+// Figma: UI kit → Chip. Implemented as `.chip` / `.chip--active` in wizard.css,
+// used as the All / Users / Groups filter in the Add Users &amp; Groups modal.
+const meta = {
+  title: &#39;Design System/Chip&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+export const Static = {
+  render: () =&gt; (
+    &lt;div className=&quot;chip-group&quot;&gt;
+      &lt;button type=&quot;button&quot; className=&quot;chip chip--active&quot;&gt;All&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Users&lt;/button&gt;
+      &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Groups&lt;/button&gt;
+    &lt;/div&gt;
+  ),
+};
+
+export const Interactive = {
+  render: () =&gt; {
+    const [active, setActive] = useState(&#39;all&#39;);
+    return (
+      &lt;div className=&quot;chip-group&quot;&gt;
+        {[[&#39;all&#39;, &#39;All&#39;], [&#39;user&#39;, &#39;Users&#39;], [&#39;group&#39;, &#39;Groups&#39;]].map(([k, lbl]) =&gt; (
+          &lt;button key={k} type=&quot;button&quot; className={&#39;chip&#39; + (active === k ? &#39; chip--active&#39; : &#39;&#39;)} onClick={() =&gt; setActive(k)}&gt;{lbl}&lt;/button&gt;
+        ))}
+      &lt;/div&gt;
+    );
+  },
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Chip } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Static</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Static = () =&gt; (
+  &lt;div className=&quot;chip-group&quot;&gt;
+    &lt;button type=&quot;button&quot; className=&quot;chip chip--active&quot;&gt;All&lt;/button&gt;
+    &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Users&lt;/button&gt;
+    &lt;button type=&quot;button&quot; className=&quot;chip&quot;&gt;Groups&lt;/button&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Interactive</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Interactive = () =&gt; {
+  const [active, setActive] = useState(&#39;all&#39;);
+  return (
+    &lt;div className=&quot;chip-group&quot;&gt;
+      {[[&#39;all&#39;, &#39;All&#39;], [&#39;user&#39;, &#39;Users&#39;], [&#39;group&#39;, &#39;Groups&#39;]].map(([k, lbl]) =&gt; (
+        &lt;button key={k} type=&quot;button&quot; className={&#39;chip&#39; + (active === k ? &#39; chip--active&#39; : &#39;&#39;)} onClick={() =&gt; setActive(k)}&gt;{lbl}&lt;/button&gt;
+      ))}
+    &lt;/div&gt;
+  );
+};</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Colors">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Colors</h2>
+      <div class="badges">
+        <label for="c-error-4-foundations-colors-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-4-foundations-colors-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-4-foundations-colors-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Colors.stories.jsx">foundations-colors · ./src/stories/Colors.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-4-foundations-colors-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-4-foundations-colors-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-4-foundations-colors-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  1 | import React from &#39;react&#39;;
+  2 |
+&gt; 3 | const meta = {
+    | ^
+  4 |   title: &#39;Foundations/Colors&#39;,
+  5 |   parameters: { layout: &#39;fullscreen&#39; },
+  6 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Colors.stories.jsx:
+import React from &#39;react&#39;;
+
+const meta = {
+  title: &#39;Foundations/Colors&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const GROUPS = [
+  {
+    name: &#39;Text&#39;,
+    tokens: [&#39;--text-primary&#39;, &#39;--text-primary-2&#39;, &#39;--text-secondary&#39;, &#39;--text-secondary-hover&#39;,
+      &#39;--text-tertiary&#39;, &#39;--text-tertiary-2&#39;, &#39;--text-quaternary&#39;, &#39;--text-placeholder&#39;,
+      &#39;--text-brand-link&#39;, &#39;--text-white&#39;],
+  },
+  {
+    name: &#39;Background&#39;,
+    tokens: [&#39;--bg-primary&#39;, &#39;--bg-secondary&#39;, &#39;--bg-tertiary&#39;, &#39;--bg-active&#39;, &#39;--bg-primary-hover&#39;,
+      &#39;--bg-error-secondary&#39;, &#39;--bg-error-solid&#39;, &#39;--bg-brand-solid&#39;, &#39;--bg-overlay&#39;],
+  },
+  {
+    name: &#39;Border&#39;,
+    tokens: [&#39;--border-primary&#39;, &#39;--border-primary-2&#39;, &#39;--border-secondary&#39;, &#39;--border-card&#39;, &#39;--border-tertiary&#39;],
+  },
+  {
+    name: &#39;Foreground (icons)&#39;,
+    tokens: [&#39;--fg-brand&#39;, &#39;--fg-secondary&#39;, &#39;--fg-tertiary&#39;, &#39;--fg-quaternary&#39;, &#39;--fg-quinary&#39;,
+      &#39;--fg-error&#39;, &#39;--fg-warning&#39;, &#39;--brand-200&#39;],
+  },
+];
+
+function Swatch({ token }) {
+  return (
+    &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 8 }}&gt;
+      &lt;div style={{
+        height: 64, borderRadius: &#39;var(--radius-md)&#39;, background: `var(${token})`,
+        border: &#39;1px solid var(--border-card)&#39;, boxShadow: &#39;var(--shadow-xs)&#39;,
+      }} /&gt;
+      &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{token}&lt;/code&gt;
+    &lt;/div&gt;
+  );
+}
+
+export const Palette = {
+  render: () =&gt; (
+    &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39; }}&gt;
+      {GROUPS.map((g) =&gt; (
+        &lt;section key={g.name} style={{ marginBottom: 40 }}&gt;
+          &lt;h3 className=&quot;t-lg-semibold&quot; style={{ marginBottom: 16, color: &#39;var(--text-primary)&#39; }}&gt;{g.name}&lt;/h3&gt;
+          &lt;div style={{ display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(160px, 1fr))&#39;, gap: 20 }}&gt;
+            {g.tokens.map((t) =&gt; &lt;Swatch key={t} token={t} /&gt;)}
+          &lt;/div&gt;
+        &lt;/section&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Colors } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Palette</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Palette = () =&gt; (
+  &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39; }}&gt;
+    {GROUPS.map((g) =&gt; (
+      &lt;section key={g.name} style={{ marginBottom: 40 }}&gt;
+        &lt;h3 className=&quot;t-lg-semibold&quot; style={{ marginBottom: 16, color: &#39;var(--text-primary)&#39; }}&gt;{g.name}&lt;/h3&gt;
+        &lt;div style={{ display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(160px, 1fr))&#39;, gap: 20 }}&gt;
+          {g.tokens.map((t) =&gt; &lt;Swatch key={t} token={t} /&gt;)}
+        &lt;/div&gt;
+      &lt;/section&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Featuredicon">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Featuredicon</h2>
+      <div class="badges">
+        <label for="c-error-5-design-system-featured-icon-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-5-design-system-featured-icon-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-5-design-system-featured-icon-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/FeaturedIcon.stories.jsx">design-system-featured-icon · ./src/stories/FeaturedIcon.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-5-design-system-featured-icon-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-5-design-system-featured-icon-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-5-design-system-featured-icon-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+   5 | // Figma: UI kit → Featured icon. Implemented as `.featured-icon` with the
+   6 | // `--gray` / `--warning` / `--error` color variants (components.css + wizard.css).
+&gt;  7 | const meta = {
+     | ^
+   8 |   title: &#39;Design System/Featured icon&#39;,
+   9 |   parameters: { layout: &#39;padded&#39; },
+  10 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/FeaturedIcon.stories.jsx:
+import React from &#39;react&#39;;
+import { IconWarning, IconSignOutLarge } from &#39;../ui/icons.jsx&#39;;
+import { IconUsersGroup } from &#39;../ui/wizard-icons.jsx&#39;;
+
+// Figma: UI kit → Featured icon. Implemented as `.featured-icon` with the
+// `--gray` / `--warning` / `--error` color variants (components.css + wizard.css).
+const meta = {
+  title: &#39;Design System/Featured icon&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Item = ({ variant, Icon, size = 24, note }) =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, alignItems: &#39;center&#39;, gap: 8 }}&gt;
+    &lt;span className={&#39;featured-icon featured-icon--&#39; + variant}&gt;
+      &lt;span className={&#39;icon-box icon-&#39; + size}&gt;&lt;Icon /&gt;&lt;/span&gt;
+    &lt;/span&gt;
+    &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;--{variant}&lt;/code&gt;
+    {note &amp;&amp; &lt;span style={{ fontSize: 11, color: &#39;var(--text-quaternary)&#39; }}&gt;{note}&lt;/span&gt;}
+  &lt;/div&gt;
+);
+
+export const Variants = {
+  render: () =&gt; (
+    &lt;div style={{ display: &#39;flex&#39;, gap: 40 }}&gt;
+      &lt;Item variant=&quot;gray&quot; Icon={IconUsersGroup} size={20} note=&quot;empty states&quot; /&gt;
+      &lt;Item variant=&quot;warning&quot; Icon={IconWarning} note=&quot;Leave wizard?&quot; /&gt;
+      &lt;Item variant=&quot;error&quot; Icon={IconSignOutLarge} note=&quot;Log out&quot; /&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Featuredicon } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Variants</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Variants = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, gap: 40 }}&gt;
+    &lt;Item variant=&quot;gray&quot; Icon={IconUsersGroup} size={20} note=&quot;empty states&quot; /&gt;
+    &lt;Item variant=&quot;warning&quot; Icon={IconWarning} note=&quot;Leave wizard?&quot; /&gt;
+    &lt;Item variant=&quot;error&quot; Icon={IconSignOutLarge} note=&quot;Log out&quot; /&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Flags">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Flags</h2>
+      <div class="badges">
+        <label for="c-error-6-foundations-flags-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-6-foundations-flags-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-6-foundations-flags-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Flags.stories.jsx">foundations-flags · ./src/stories/Flags.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-6-foundations-flags-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-6-foundations-flags-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-6-foundations-flags-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  2 | import * as Flags from &#39;../ui/Flags.jsx&#39;;
+  3 |
+&gt; 4 | const meta = {
+    | ^
+  5 |   title: &#39;Foundations/Flags&#39;,
+  6 |   parameters: {
+  7 |     layout: &#39;fullscreen&#39;,
+
+./src/stories/Flags.stories.jsx:
+import React from &#39;react&#39;;
+import * as Flags from &#39;../ui/Flags.jsx&#39;;
+
+const meta = {
+  title: &#39;Foundations/Flags&#39;,
+  parameters: {
+    layout: &#39;fullscreen&#39;,
+    docs: { description: { component: &#39;National flags used by the language switcher, rendered at the 20×15 footprint.&#39; } },
+  },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const entries = Object.entries(Flags).filter(([name, v]) =&gt; name.startsWith(&#39;Flag&#39;) &amp;&amp; typeof v === &#39;function&#39;);
+
+export const AllFlags = {
+  render: () =&gt; (
+    &lt;div style={{
+      padding: 32, background: &#39;var(--bg-primary)&#39;,
+      display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(120px, 1fr))&#39;, gap: 16,
+    }}&gt;
+      {entries.map(([name, Flag]) =&gt; (
+        &lt;div key={name} style={{
+          display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 10,
+          padding: 12, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+        }}&gt;
+          &lt;Flag /&gt;
+          &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Flags } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Flags</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllFlags = () =&gt; (
+  &lt;div style={{
+    padding: 32, background: &#39;var(--bg-primary)&#39;,
+    display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(120px, 1fr))&#39;, gap: 16,
+  }}&gt;
+    {entries.map(([name, Flag]) =&gt; (
+      &lt;div key={name} style={{
+        display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 10,
+        padding: 12, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+      }}&gt;
+        &lt;Flag /&gt;
+        &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Icons">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Icons</h2>
+      <div class="badges">
+        <label for="c-error-7-foundations-icons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-7-foundations-icons-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-7-foundations-icons-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Icons.stories.jsx">foundations-icons · ./src/stories/Icons.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-7-foundations-icons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-7-foundations-icons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-7-foundations-icons-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  2 | import * as Icons from &#39;../ui/icons.jsx&#39;;
+  3 |
+&gt; 4 | const meta = {
+    | ^
+  5 |   title: &#39;Foundations/Icons&#39;,
+  6 |   parameters: { layout: &#39;fullscreen&#39; },
+  7 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Icons.stories.jsx:
+import React from &#39;react&#39;;
+import * as Icons from &#39;../ui/icons.jsx&#39;;
+
+const meta = {
+  title: &#39;Foundations/Icons&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const entries = Object.entries(Icons).filter(([, v]) =&gt; typeof v === &#39;function&#39;);
+
+export const AllIcons = {
+  render: () =&gt; (
+    &lt;div style={{
+      padding: 32, background: &#39;var(--bg-primary)&#39;,
+      display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(140px, 1fr))&#39;, gap: 12,
+    }}&gt;
+      {entries.map(([name, Icon]) =&gt; (
+        &lt;div key={name} style={{
+          display: &#39;flex&#39;, flexDirection: &#39;column&#39;, alignItems: &#39;center&#39;, gap: 10,
+          padding: &#39;18px 12px&#39;, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+          color: &#39;var(--fg-secondary)&#39;,
+        }}&gt;
+          &lt;span className=&quot;icon-box icon-20&quot; style={{ width: 24, height: 24 }}&gt;&lt;Icon /&gt;&lt;/span&gt;
+          &lt;code style={{ fontSize: 11, color: &#39;var(--text-tertiary)&#39;, textAlign: &#39;center&#39;, wordBreak: &#39;break-word&#39; }}&gt;{name}&lt;/code&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Icons } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Icons</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllIcons = () =&gt; (
+  &lt;div style={{
+    padding: 32, background: &#39;var(--bg-primary)&#39;,
+    display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(140px, 1fr))&#39;, gap: 12,
+  }}&gt;
+    {entries.map(([name, Icon]) =&gt; (
+      &lt;div key={name} style={{
+        display: &#39;flex&#39;, flexDirection: &#39;column&#39;, alignItems: &#39;center&#39;, gap: 10,
+        padding: &#39;18px 12px&#39;, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+        color: &#39;var(--fg-secondary)&#39;,
+      }}&gt;
+        &lt;span className=&quot;icon-box icon-20&quot; style={{ width: 24, height: 24 }}&gt;&lt;Icon /&gt;&lt;/span&gt;
+        &lt;code style={{ fontSize: 11, color: &#39;var(--text-tertiary)&#39;, textAlign: &#39;center&#39;, wordBreak: &#39;break-word&#39; }}&gt;{name}&lt;/code&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Infobanner">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Infobanner</h2>
+      <div class="badges">
+        <label for="c-error-8-design-system-info-banner-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-8-design-system-info-banner-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-8-design-system-info-banner-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/InfoBanner.stories.jsx">design-system-info-banner · ./src/stories/InfoBanner.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-8-design-system-info-banner-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-8-design-system-info-banner-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-8-design-system-info-banner-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Notifications (Minor notification). Implemented as
+  5 | // `.info-banner` in wizard.css, shown in the Users &amp; Groups step.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Info banner&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/InfoBanner.stories.jsx:
+import React from &#39;react&#39;;
+import { IconInfo } from &#39;../ui/wizard-icons.jsx&#39;;
+
+// Figma: UI kit → Notifications (Minor notification). Implemented as
+// `.info-banner` in wizard.css, shown in the Users &amp; Groups step.
+const meta = {
+  title: &#39;Design System/Info banner&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+export const Default = {
+  render: () =&gt; (
+    &lt;div className=&quot;info-banner&quot; style={{ maxWidth: 640 }}&gt;
+      &lt;span className=&quot;icon-box icon-20 info-banner__icon&quot;&gt;&lt;IconInfo /&gt;&lt;/span&gt;
+      &lt;span className=&quot;t-sm-regular&quot;&gt;New shares will be available to currently logged in users after logoff / login&lt;/span&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconInfo } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Default</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Default = () =&gt; (
+  &lt;div className=&quot;info-banner&quot; style={{ maxWidth: 640 }}&gt;
+    &lt;span className=&quot;icon-box icon-20 info-banner__icon&quot;&gt;&lt;IconInfo /&gt;&lt;/span&gt;
+    &lt;span className=&quot;t-sm-regular&quot;&gt;New shares will be available to currently logged in users after logoff / login&lt;/span&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Modals">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Modals</h2>
+      <div class="badges">
+        <label for="c-error-9-components-modals-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-9-components-modals-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-9-components-modals-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Modals.stories.jsx">components-modals · ./src/stories/Modals.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-9-components-modals-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-9-components-modals-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-9-components-modals-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+   6 | // (small, `.modal`) and AddUsersModal (`.modal--wide`, shown in its own story via
+   7 | // the Users &amp; Groups step). These render the two small confirmation modals.
+&gt;  8 | const meta = {
+     | ^
+   9 |   title: &#39;Components/Modals&#39;,
+  10 |   parameters: { layout: &#39;fullscreen&#39; },
+  11 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Modals.stories.jsx:
+import React, { useState } from &#39;react&#39;;
+import LeaveWizardModal from &#39;../layout/LeaveWizardModal.jsx&#39;;
+import LogoutModal from &#39;../layout/LogoutModal.jsx&#39;;
+
+// Figma: UI kit → Modals. The app ships three: LeaveWizardModal and LogoutModal
+// (small, `.modal`) and AddUsersModal (`.modal--wide`, shown in its own story via
+// the Users &amp; Groups step). These render the two small confirmation modals.
+const meta = {
+  title: &#39;Components/Modals&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+  decorators: [(Story) =&gt; &lt;div style={{ minHeight: 420, position: &#39;relative&#39; }}&gt;&lt;Story /&gt;&lt;/div&gt;],
+};
+export default meta;
+
+export const LeaveWizard = {
+  render: () =&gt; {
+    const [open, setOpen] = useState(true);
+    return (
+      &lt;&gt;
+        {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+        &lt;LeaveWizardModal open={open} targetLabel=&quot;Settings&quot; onStay={() =&gt; setOpen(false)} onLeave={() =&gt; setOpen(false)} /&gt;
+      &lt;/&gt;
+    );
+  },
+};
+
+export const Logout = {
+  render: () =&gt; {
+    const [open, setOpen] = useState(true);
+    return (
+      &lt;&gt;
+        {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+        &lt;LogoutModal open={open} onCancel={() =&gt; setOpen(false)} onConfirm={() =&gt; setOpen(false)} /&gt;
+      &lt;/&gt;
+    );
+  },
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { LeaveWizardModal, LogoutModal } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Leave Wizard</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const LeaveWizard = () =&gt; {
+  const [open, setOpen] = useState(true);
+  return (
+    &lt;&gt;
+      {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+      &lt;LeaveWizardModal open={open} targetLabel=&quot;Settings&quot; onStay={() =&gt; setOpen(false)} onLeave={() =&gt; setOpen(false)} /&gt;
+    &lt;/&gt;
+  );
+};</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Logout</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Logout = () =&gt; {
+  const [open, setOpen] = useState(true);
+  return (
+    &lt;&gt;
+      {!open &amp;&amp; &lt;button type=&quot;button&quot; className=&quot;btn btn--primary&quot; onClick={() =&gt; setOpen(true)}&gt;Reopen&lt;/button&gt;}
+      &lt;LogoutModal open={open} onCancel={() =&gt; setOpen(false)} onConfirm={() =&gt; setOpen(false)} /&gt;
+    &lt;/&gt;
+  );
+};</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Searchfield">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Searchfield</h2>
+      <div class="badges">
+        <label for="c-error-10-design-system-search-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-10-design-system-search-field-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-10-design-system-search-field-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/SearchField.stories.jsx">design-system-search-field · ./src/stories/SearchField.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-10-design-system-search-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-10-design-system-search-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-10-design-system-search-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Inputs (search variant). Implemented as `.field` /
+  5 | // `.field--search` with a leading `.field__icon` in components.css.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Search field&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/SearchField.stories.jsx:
+import React from &#39;react&#39;;
+import { IconSearch } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Inputs (search variant). Implemented as `.field` /
+// `.field--search` with a leading `.field__icon` in components.css.
+const meta = {
+  title: &#39;Design System/Search field&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Search = ({ disabled, defaultValue, width }) =&gt; (
+  &lt;div className=&quot;field field--search&quot; style={{ width }}&gt;
+    &lt;span className=&quot;icon-box icon-24 field__icon&quot;&gt;&lt;IconSearch /&gt;&lt;/span&gt;
+    &lt;input className=&quot;field__input t-md-regular&quot; placeholder=&quot;Search&quot; defaultValue={defaultValue} disabled={disabled} aria-label=&quot;Search&quot; /&gt;
+  &lt;/div&gt;
+);
+
+export const States = {
+  render: () =&gt; (
+    &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 20 }}&gt;
+      &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Default&lt;/div&gt;&lt;Search /&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;With value&lt;/div&gt;&lt;Search defaultValue=&quot;Backup&quot; /&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Disabled (empty assigned list)&lt;/div&gt;&lt;Search disabled /&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconSearch } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">States</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const States = () =&gt; (
+  &lt;div style={{ display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 20 }}&gt;
+    &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Default&lt;/div&gt;&lt;Search /&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;With value&lt;/div&gt;&lt;Search defaultValue=&quot;Backup&quot; /&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;div className=&quot;t-sm-semibold&quot; style={{ color: &#39;var(--text-tertiary)&#39;, marginBottom: 8 }}&gt;Disabled (empty assigned list)&lt;/div&gt;&lt;Search disabled /&gt;&lt;/div&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Select">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Select</h2>
+      <div class="badges">
+        <label for="c-error-11-design-system-select-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-11-design-system-select-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-11-design-system-select-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Select.stories.jsx">design-system-select · ./src/stories/Select.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-11-design-system-select-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-11-design-system-select-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-11-design-system-select-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Input dropdowns (Input dropdown). Implemented as the native
+  5 | // `.select` wrapper with `.select__native` + `.select__chevron` in wizard.css.
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Select&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Select.stories.jsx:
+import React from &#39;react&#39;;
+import { IconChevronDown } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Input dropdowns (Input dropdown). Implemented as the native
+// `.select` wrapper with `.select__native` + `.select__chevron` in wizard.css.
+const meta = {
+  title: &#39;Design System/Select&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const NativeSelect = ({ className, options, error }) =&gt; (
+  &lt;div className={&#39;select &#39; + className}&gt;
+    &lt;select className={&#39;select__native t-md-regular&#39; + (error ? &#39; is-error&#39; : &#39;&#39;)} defaultValue={options[0]}&gt;
+      {options.map((o) =&gt; &lt;option key={o} value={o}&gt;{o}&lt;/option&gt;)}
+    &lt;/select&gt;
+    &lt;span className=&quot;icon-box icon-20 select__chevron&quot;&gt;&lt;IconChevronDown /&gt;&lt;/span&gt;
+  &lt;/div&gt;
+);
+
+const Field = ({ label, children }) =&gt; (
+  &lt;div className=&quot;form-field&quot; style={{ marginBottom: 24 }}&gt;
+    &lt;label className=&quot;t-sm-semibold form-label&quot;&gt;{label}&lt;/label&gt;
+    {children}
+  &lt;/div&gt;
+);
+
+export const Variants = {
+  render: () =&gt; (
+    &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+      &lt;Field label=&quot;Small (.select--sm) — drive letter&quot;&gt;
+        &lt;NativeSelect className=&quot;select--sm&quot; options={[&#39;M:&#39;, &#39;N:&#39;, &#39;O:&#39;, &#39;P:&#39;]} /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Full width (.select--full) — S3 region&quot;&gt;
+        &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;us-east-1&#39;, &#39;us-west-2&#39;, &#39;eu-west-1&#39;]} /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Error state (.is-error)&quot;&gt;
+        &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;Select region&#39;, &#39;us-east-1&#39;]} error /&gt;
+      &lt;/Field&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconChevronDown } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Variants</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Variants = () =&gt; (
+  &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+    &lt;Field label=&quot;Small (.select--sm) — drive letter&quot;&gt;
+      &lt;NativeSelect className=&quot;select--sm&quot; options={[&#39;M:&#39;, &#39;N:&#39;, &#39;O:&#39;, &#39;P:&#39;]} /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Full width (.select--full) — S3 region&quot;&gt;
+      &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;us-east-1&#39;, &#39;us-west-2&#39;, &#39;eu-west-1&#39;]} /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Error state (.is-error)&quot;&gt;
+      &lt;NativeSelect className=&quot;select--full&quot; options={[&#39;Select region&#39;, &#39;us-east-1&#39;]} error /&gt;
+    &lt;/Field&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Storagelogos">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Storagelogos</h2>
+      <div class="badges">
+        <label for="c-error-12-foundations-storage-logos-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-12-foundations-storage-logos-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-12-foundations-storage-logos-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/StorageLogos.stories.jsx">foundations-storage-logos · ./src/stories/StorageLogos.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-12-foundations-storage-logos-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-12-foundations-storage-logos-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-12-foundations-storage-logos-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  2 | import * as Logos from &#39;../ui/logos.jsx&#39;;
+  3 |
+&gt; 4 | const meta = {
+    | ^
+  5 |   title: &#39;Foundations/Storage logos&#39;,
+  6 |   parameters: { layout: &#39;fullscreen&#39; },
+  7 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/StorageLogos.stories.jsx:
+import React from &#39;react&#39;;
+import * as Logos from &#39;../ui/logos.jsx&#39;;
+
+const meta = {
+  title: &#39;Foundations/Storage logos&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const entries = Object.entries(Logos).filter(([, v]) =&gt; typeof v === &#39;function&#39;);
+
+export const AllLogos = {
+  render: () =&gt; (
+    &lt;div style={{
+      padding: 32, background: &#39;var(--bg-primary)&#39;,
+      display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(180px, 1fr))&#39;, gap: 16,
+    }}&gt;
+      {entries.map(([name, Logo]) =&gt; (
+        &lt;div key={name} style={{
+          display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 12,
+          padding: 16, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+        }}&gt;
+          &lt;span className=&quot;icon-box&quot; style={{ width: 32, height: 32 }}&gt;&lt;Logo /&gt;&lt;/span&gt;
+          &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Storagelogos } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">All Logos</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const AllLogos = () =&gt; (
+  &lt;div style={{
+    padding: 32, background: &#39;var(--bg-primary)&#39;,
+    display: &#39;grid&#39;, gridTemplateColumns: &#39;repeat(auto-fill, minmax(180px, 1fr))&#39;, gap: 16,
+  }}&gt;
+    {entries.map(([name, Logo]) =&gt; (
+      &lt;div key={name} style={{
+        display: &#39;flex&#39;, alignItems: &#39;center&#39;, gap: 12,
+        padding: 16, border: &#39;1px solid var(--border-card)&#39;, borderRadius: &#39;var(--radius-md)&#39;,
+      }}&gt;
+        &lt;span className=&quot;icon-box&quot; style={{ width: 32, height: 32 }}&gt;&lt;Logo /&gt;&lt;/span&gt;
+        &lt;code style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{name}&lt;/code&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Textfield">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Textfield</h2>
+      <div class="badges">
+        <label for="c-error-13-design-system-text-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-13-design-system-text-field-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-13-design-system-text-field-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/TextField.stories.jsx">design-system-text-field · ./src/stories/TextField.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-13-design-system-text-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-13-design-system-text-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-13-design-system-text-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  3 | // Figma: UI kit → Inputs (Input field). Implemented as `.text-input` with
+  4 | // `.form-field` / `.form-label` / `.field-hint` / `.field-error` in wizard.css.
+&gt; 5 | const meta = {
+    | ^
+  6 |   title: &#39;Design System/Text field&#39;,
+  7 |   parameters: { layout: &#39;padded&#39; },
+  8 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/TextField.stories.jsx:
+import React from &#39;react&#39;;
+
+// Figma: UI kit → Inputs (Input field). Implemented as `.text-input` with
+// `.form-field` / `.form-label` / `.field-hint` / `.field-error` in wizard.css.
+const meta = {
+  title: &#39;Design System/Text field&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const Field = ({ label, required, hint, error, children }) =&gt; (
+  &lt;div className=&quot;form-field&quot; style={{ marginBottom: 24 }}&gt;
+    &lt;label className=&quot;t-sm-semibold form-label&quot;&gt;{label} {required &amp;&amp; &lt;span className=&quot;req&quot;&gt;*&lt;/span&gt;}&lt;/label&gt;
+    {children}
+    {error
+      ? &lt;p className=&quot;t-sm-regular field-error&quot;&gt;{error}&lt;/p&gt;
+      : hint &amp;&amp; &lt;p className=&quot;t-sm-regular field-hint&quot;&gt;{hint}&lt;/p&gt;}
+  &lt;/div&gt;
+);
+
+export const States = {
+  render: () =&gt; (
+    &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+      &lt;Field label=&quot;Empty (placeholder)&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;\\mwf\network-share&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Filled&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; defaultValue=&quot;Analytics bucket&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;With hint&quot; hint=&quot;Primary or secondary key from the storage account.&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Enter a value&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Required, error&quot; required error=&quot;Bucket name is required.&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular is-error&quot; placeholder=&quot;my-bucket&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Password (masked)&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; type=&quot;password&quot; defaultValue=&quot;secretvalue&quot; /&gt;
+      &lt;/Field&gt;
+      &lt;Field label=&quot;Disabled&quot;&gt;
+        &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Disabled&quot; disabled /&gt;
+      &lt;/Field&gt;
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Textfield } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">States</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const States = () =&gt; (
+  &lt;div className=&quot;form-card&quot; style={{ maxWidth: 560 }}&gt;
+    &lt;Field label=&quot;Empty (placeholder)&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;\\mwf\network-share&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Filled&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; defaultValue=&quot;Analytics bucket&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;With hint&quot; hint=&quot;Primary or secondary key from the storage account.&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Enter a value&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Required, error&quot; required error=&quot;Bucket name is required.&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular is-error&quot; placeholder=&quot;my-bucket&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Password (masked)&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; type=&quot;password&quot; defaultValue=&quot;secretvalue&quot; /&gt;
+    &lt;/Field&gt;
+    &lt;Field label=&quot;Disabled&quot;&gt;
+      &lt;input className=&quot;text-input t-md-regular&quot; placeholder=&quot;Disabled&quot; disabled /&gt;
+    &lt;/Field&gt;
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Typography">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Typography</h2>
+      <div class="badges">
+        <label for="c-error-14-foundations-typography-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-14-foundations-typography-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-14-foundations-typography-stories" class="badge ok as-toggle">1 story</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Typography.stories.jsx">foundations-typography · ./src/stories/Typography.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-14-foundations-typography-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-14-foundations-typography-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-14-foundations-typography-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  1 | import React from &#39;react&#39;;
+  2 |
+&gt; 3 | const meta = {
+    | ^
+  4 |   title: &#39;Foundations/Typography&#39;,
+  5 |   parameters: { layout: &#39;fullscreen&#39; },
+  6 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Typography.stories.jsx:
+import React from &#39;react&#39;;
+
+const meta = {
+  title: &#39;Foundations/Typography&#39;,
+  parameters: { layout: &#39;fullscreen&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+const STYLES = [
+  { cls: &#39;t-display-xs-semibold&#39;, use: &#39;Page &amp; step titles&#39; },
+  { cls: &#39;t-lg-semibold&#39;, use: &#39;Section headings&#39; },
+  { cls: &#39;t-md-semibold&#39;, use: &#39;Card titles, emphasis&#39; },
+  { cls: &#39;t-md-regular&#39;, use: &#39;Body copy, inputs&#39; },
+  { cls: &#39;t-sm-semibold&#39;, use: &#39;Labels, active page&#39; },
+  { cls: &#39;t-sm-regular&#39;, use: &#39;Secondary text, hints&#39; },
+  { cls: &#39;t-xs-semibold&#39;, use: &#39;Table headers, badges, tooltips&#39; },
+];
+
+export const Scale = {
+  render: () =&gt; (
+    &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39;, display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 28 }}&gt;
+      {STYLES.map((s) =&gt; (
+        &lt;div key={s.cls} style={{ borderBottom: &#39;1px solid var(--border-secondary)&#39;, paddingBottom: 20 }}&gt;
+          &lt;div className={s.cls} style={{ color: &#39;var(--text-primary-2)&#39; }}&gt;
+            The quick brown fox jumps over the lazy dog
+          &lt;/div&gt;
+          &lt;div style={{ marginTop: 8, display: &#39;flex&#39;, gap: 16 }}&gt;
+            &lt;code style={{ fontSize: 12, color: &#39;var(--text-brand-link)&#39; }}&gt;.{s.cls}&lt;/code&gt;
+            &lt;span style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{s.use}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  ),
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">Specify an @import jsdoc tag on your component or your stories meta such as @import import { Typography } from &#39;my-design-system&#39;;</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Scale</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Scale = () =&gt; (
+  &lt;div style={{ padding: 32, background: &#39;var(--bg-primary)&#39;, display: &#39;flex&#39;, flexDirection: &#39;column&#39;, gap: 28 }}&gt;
+    {STYLES.map((s) =&gt; (
+      &lt;div key={s.cls} style={{ borderBottom: &#39;1px solid var(--border-secondary)&#39;, paddingBottom: 20 }}&gt;
+        &lt;div className={s.cls} style={{ color: &#39;var(--text-primary-2)&#39; }}&gt;
+          The quick brown fox jumps over the lazy dog
+        &lt;/div&gt;
+        &lt;div style={{ marginTop: 8, display: &#39;flex&#39;, gap: 16 }}&gt;
+          &lt;code style={{ fontSize: 12, color: &#39;var(--text-brand-link)&#39; }}&gt;.{s.cls}&lt;/code&gt;
+          &lt;span style={{ fontSize: 12, color: &#39;var(--text-tertiary)&#39; }}&gt;{s.use}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    ))}
+  &lt;/div&gt;
+);</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article></div>
+        </section>
+      </div>
+    
+    
+  </div>
+</main>
+</body>
+</html>  
