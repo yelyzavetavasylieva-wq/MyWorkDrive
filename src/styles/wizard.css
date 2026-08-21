@@ -28,11 +28,8 @@ button.step__circle { cursor: pointer; }
 .step[data-state="upcoming"] .step__circle { background: var(--bg-primary); border: 1.5px solid var(--border-primary); }
 .step__dot { width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--border-primary); }
 .step__dot--active { background: #fff; }
-.step__label { color: var(--text-primary); }
+.step__label { color: var(--text-primary); text-align: center; }
 .step[data-state="active"] .step__label { color: var(--fg-brand); }
-.step:first-child .step__label { align-self: flex-start; }
-.step:last-child .step__label { align-self: flex-end; text-align: right; }
-.step:not(:first-child):not(:last-child) .step__label { align-self: center; text-align: center; }
 
 /* ============================ Step head ============================ */
 .wz-step__head { margin-bottom: var(--spacing-3xl); }
