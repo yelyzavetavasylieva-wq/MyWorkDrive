@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { DIRECTORY } from '../../data/wizard.js';
 import { IconSearch, IconDismiss } from '../../ui/icons.jsx';
-import { IconUsersGroup, IconUserSingle } from '../../ui/wizard-icons.jsx';
+import { IconUsersGroup, IconUserSingle, IconTrash } from '../../ui/wizard-icons.jsx';
 
 function Avatar({ type }) {
   return (
@@ -94,7 +94,7 @@ export default function AddUsersModal({ open, onClose, initialIds, onConfirm }) 
                     <Avatar type={d.type} />
                     <span className="t-sm-regular dir-item__name">{d.name}</span>
                     <button type="button" className="dir-item__remove" onClick={() => remove(d.id)} aria-label={`Remove ${d.name}`}>
-                      <span className="icon-box icon-16"><IconDismiss /></span>
+                      <span className="icon-box icon-16"><IconTrash /></span>
                     </button>
                   </div>
                 ))}

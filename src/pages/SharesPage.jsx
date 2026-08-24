@@ -4,7 +4,7 @@ import { STORAGE_LABELS } from '../data/shares.js';
 import { useShares } from '../store/SharesContext.jsx';
 import {
   IconSearch, IconSortDown, IconEdit, IconCheckCircle, IconChevronDown, IconDismiss,
-  IconErrorCircle, IconWarning, IconGlobe, IconLockOpen, IconArrowDownload, IconDocEdit,
+  IconErrorCircle, IconWarning, IconGlobe, IconLockOpen, IconArrowDownload, IconDocEdit, IconShares,
 } from '../ui/icons.jsx';
 import { IconTrash } from '../ui/wizard-icons.jsx';
 import {
@@ -284,7 +284,18 @@ export default function SharesPage() {
               })}
               {rows.length === 0 && (
                 <tr>
-                  <td className="td td--empty" colSpan={driveLetters ? 8 : 7}>No shares match “{query}”.</td>
+                  <td className="td td--empty" colSpan={driveLetters ? 8 : 7}>
+                    <div className="table-empty">
+                      <span className="featured-icon featured-icon--gray"><span className="icon-box icon-24"><IconShares /></span></span>
+                      <p className="t-md-semibold">{query ? 'No shares found' : 'No shares yet'}</p>
+                      <p className="t-sm-regular table-empty__desc">
+                        {query ? `No shares match “${query}”.` : 'Add your first share to make files available to users.'}
+                      </p>
+                      {!query && (
+                        <button type="button" className="btn btn--secondary" onClick={() => navigate('/shares/new')}>Add new share</button>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               )}
             </tbody>

@@ -86,6 +86,29 @@
         }
       ]
     },
+    "design-system-alert": {
+      "id": "design-system-alert",
+      "name": "Alert",
+      "path": "./src/stories/Alert.stories.jsx",
+      "jsDocTags": {},
+      "error": {
+        "name": "No component found",
+        "message": "We could not detect the component from your story file. Specify meta.component.\n  4 | // Figma: UI kit → Alert. The app uses the success variant as a toast shown after\n  5 | // creating or deleting a share (SharesPage `.toast`).\n> 6 | const meta = {\n    | ^\n  7 |   title: 'Design System/Alert',\n  8 |   parameters: { layout: 'padded' },\n  9 |   tags: ['autodocs'],\n\n./src/stories/Alert.stories.jsx:\nimport React from 'react';\nimport { IconCheckCircle, IconDismiss } from '../ui/icons.jsx';\n\n// Figma: UI kit → Alert. The app uses the success variant as a toast shown after\n// creating or deleting a share (SharesPage `.toast`).\nconst meta = {\n  title: 'Design System/Alert',\n  parameters: { layout: 'padded' },\n  tags: ['autodocs'],\n};\nexport default meta;\n\nfunction Toast({ text }) {\n  return (\n    <div className=\"toast\" role=\"status\">\n      <span className=\"icon-box icon-20 toast__icon\"><IconCheckCircle /></span>\n      <span className=\"t-sm-regular toast__text\">{text}</span>\n      <button type=\"button\" className=\"toast__close\" aria-label=\"Dismiss\">\n        <span className=\"icon-box icon-16\"><IconDismiss /></span>\n      </button>\n    </div>\n  );\n}\n\nexport const Success = {\n  render: () => <Toast text={'“SMB share” created successfully.'} />,\n};\n\nexport const Deletion = {\n  render: () => <Toast text={'“BackupNode-A” share successfully deleted'} />,\n};\n"
+      },
+      "stories": [
+        {
+          "id": "design-system-alert--success",
+          "name": "Success",
+          "snippet": "const Success = () => <Toast text={'“SMB share” created successfully.'} />;"
+        },
+        {
+          "id": "design-system-alert--deletion",
+          "name": "Deletion",
+          "snippet": "const Deletion = () => <Toast text={'“BackupNode-A” share successfully deleted'} />;"
+        }
+      ],
+      "import": "import { IconCheckCircle, IconDismiss } from \"myworkdrive-admin\";"
+    },
     "design-system-badges": {
       "id": "design-system-badges",
       "name": "Badges",
@@ -470,6 +493,6 @@
   },
   "meta": {
     "docgen": "react-docgen",
-    "durationMs": 1517
+    "durationMs": 574
   }
 }

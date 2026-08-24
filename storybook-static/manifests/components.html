@@ -588,13 +588,13 @@
 <header>
   <div class="wrap">
     <h1>Manifest Debugger</h1>
-    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill err" data-k="errors" href="#filter-errors">15/20 prop type errors</a><a class="filter-pill info" data-k="infos" href="#filter-infos">20/20 infos</a><span class="filter-pill ok" aria-disabled="true">34 stories ok</span></div>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><a class="filter-pill err" data-k="errors" href="#filter-errors">16/21 prop type errors</a><a class="filter-pill info" data-k="infos" href="#filter-infos">21/21 infos</a><span class="filter-pill ok" aria-disabled="true">36 stories ok</span></div>
   </div>
 </header>
 <main>
   <div class="wrap">
     <div class="note info" style="margin-bottom: 16px;">
-            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>1.5s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
+            <strong>Tip:</strong> You are using <code>react-docgen</code> (the default). Generation took <strong>0.6s</strong>. For higher quality prop types, consider switching to <code>react-docgen-typescript</code> in your <code>main.ts</code>:
             <pre><code>typescript: {
   reactDocgen: 'react-docgen-typescript',
 }</code></pre>
@@ -611,14 +611,142 @@
   no-story-error
   no-doc-error"
   role="listitem"
+  aria-label="Alert">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Alert</h2>
+      <div class="badges">
+        <label for="c-0-design-system-alert-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-0-design-system-alert-info" class="badge info as-toggle">1 info</label>
+        <label for="c-0-design-system-alert-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Alert.stories.jsx">design-system-alert · ./src/stories/Alert.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-0-design-system-alert-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-0-design-system-alert-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-0-design-system-alert-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Alert. The app uses the success variant as a toast shown after
+  5 | // creating or deleting a share (SharesPage `.toast`).
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Alert&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Alert.stories.jsx:
+import React from &#39;react&#39;;
+import { IconCheckCircle, IconDismiss } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Alert. The app uses the success variant as a toast shown after
+// creating or deleting a share (SharesPage `.toast`).
+const meta = {
+  title: &#39;Design System/Alert&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+function Toast({ text }) {
+  return (
+    &lt;div className=&quot;toast&quot; role=&quot;status&quot;&gt;
+      &lt;span className=&quot;icon-box icon-20 toast__icon&quot;&gt;&lt;IconCheckCircle /&gt;&lt;/span&gt;
+      &lt;span className=&quot;t-sm-regular toast__text&quot;&gt;{text}&lt;/span&gt;
+      &lt;button type=&quot;button&quot; className=&quot;toast__close&quot; aria-label=&quot;Dismiss&quot;&gt;
+        &lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconDismiss /&gt;&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+export const Success = {
+  render: () =&gt; &lt;Toast text={&#39;“SMB share” created successfully.&#39;} /&gt;,
+};
+
+export const Deletion = {
+  render: () =&gt; &lt;Toast text={&#39;“BackupNode-A” share successfully deleted&#39;} /&gt;,
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconCheckCircle, IconDismiss } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Success</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Success = () =&gt; &lt;Toast text={&#39;“SMB share” created successfully.&#39;} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Deletion</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Deletion = () =&gt; &lt;Toast text={&#39;“BackupNode-A” share successfully deleted&#39;} /&gt;;</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
   aria-label="Badges">
   <div class="head">
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Badges</h2>
       <div class="badges">
-        <label for="c-0-design-system-badges-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-0-design-system-badges-info" class="badge info as-toggle">1 info</label>
-        <label for="c-0-design-system-badges-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-1-design-system-badges-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-1-design-system-badges-info" class="badge info as-toggle">1 info</label>
+        <label for="c-1-design-system-badges-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -630,9 +758,9 @@
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-0-design-system-badges-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-0-design-system-badges-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-0-design-system-badges-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-1-design-system-badges-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-1-design-system-badges-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-1-design-system-badges-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -783,9 +911,9 @@ export const StatusIcons = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Breadcrumbs</h2>
       <div class="badges">
-        <label for="c-1-design-system-breadcrumbs-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-1-design-system-breadcrumbs-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-1-design-system-breadcrumbs-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-2-design-system-breadcrumbs-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-2-design-system-breadcrumbs-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-2-design-system-breadcrumbs-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -797,9 +925,9 @@ export const StatusIcons = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-1-design-system-breadcrumbs-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-1-design-system-breadcrumbs-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-1-design-system-breadcrumbs-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-2-design-system-breadcrumbs-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-2-design-system-breadcrumbs-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-2-design-system-breadcrumbs-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -896,9 +1024,9 @@ export const Default = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Buttons</h2>
       <div class="badges">
-        <label for="c-2-design-system-buttons-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-2-design-system-buttons-info" class="badge info as-toggle">1 info</label>
-        <label for="c-2-design-system-buttons-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-3-design-system-buttons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-3-design-system-buttons-info" class="badge info as-toggle">1 info</label>
+        <label for="c-3-design-system-buttons-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -910,9 +1038,9 @@ export const Default = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-2-design-system-buttons-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-2-design-system-buttons-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-2-design-system-buttons-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-3-design-system-buttons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-3-design-system-buttons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-3-design-system-buttons-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1075,9 +1203,9 @@ export const Variants = {
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Checkbox</h2>
       <div class="badges">
-        <label for="c-3-components-checkbox-props" class="badge ok as-toggle">2 prop types</label>
-        <label for="c-3-components-checkbox-info" class="badge info as-toggle">1 info</label>
-        <label for="c-3-components-checkbox-stories" class="badge ok as-toggle">4 stories</label>
+        <label for="c-4-components-checkbox-props" class="badge ok as-toggle">2 prop types</label>
+        <label for="c-4-components-checkbox-info" class="badge info as-toggle">1 info</label>
+        <label for="c-4-components-checkbox-stories" class="badge ok as-toggle">4 stories</label>
         
         
       </div>
@@ -1090,11 +1218,11 @@ export const Variants = {
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-3-components-checkbox-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-3-components-checkbox-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-4-components-checkbox-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-4-components-checkbox-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-3-components-checkbox-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-4-components-checkbox-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -1192,9 +1320,9 @@ indeterminate?: any = false</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Chip</h2>
       <div class="badges">
-        <label for="c-4-design-system-chip-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-4-design-system-chip-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-4-design-system-chip-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-5-design-system-chip-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-5-design-system-chip-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-5-design-system-chip-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -1206,9 +1334,9 @@ indeterminate?: any = false</code></pre>
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-4-design-system-chip-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-4-design-system-chip-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-4-design-system-chip-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-5-design-system-chip-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-5-design-system-chip-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-5-design-system-chip-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1336,9 +1464,9 @@ export const Interactive = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Colors</h2>
       <div class="badges">
-        <label for="c-5-foundations-colors-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-5-foundations-colors-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-5-foundations-colors-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-6-foundations-colors-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-6-foundations-colors-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-6-foundations-colors-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -1350,9 +1478,9 @@ export const Interactive = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-5-foundations-colors-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-5-foundations-colors-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-5-foundations-colors-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-6-foundations-colors-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-6-foundations-colors-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-6-foundations-colors-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1492,9 +1620,9 @@ export const Palette = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Featuredicon</h2>
       <div class="badges">
-        <label for="c-6-design-system-featured-icon-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-6-design-system-featured-icon-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-6-design-system-featured-icon-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-7-design-system-featured-icon-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-7-design-system-featured-icon-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-7-design-system-featured-icon-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -1506,9 +1634,9 @@ export const Palette = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-6-design-system-featured-icon-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-6-design-system-featured-icon-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-6-design-system-featured-icon-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-7-design-system-featured-icon-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-7-design-system-featured-icon-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-7-design-system-featured-icon-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1617,9 +1745,9 @@ export const Variants = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Flags</h2>
       <div class="badges">
-        <label for="c-7-foundations-flags-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-7-foundations-flags-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-7-foundations-flags-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-8-foundations-flags-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-8-foundations-flags-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-8-foundations-flags-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -1631,9 +1759,9 @@ export const Variants = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-7-foundations-flags-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-7-foundations-flags-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-7-foundations-flags-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-8-foundations-flags-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-8-foundations-flags-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-8-foundations-flags-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1752,9 +1880,9 @@ export const AllFlags = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Icons</h2>
       <div class="badges">
-        <label for="c-8-foundations-icons-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-8-foundations-icons-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-8-foundations-icons-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-9-foundations-icons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-9-foundations-icons-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-9-foundations-icons-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -1766,9 +1894,9 @@ export const AllFlags = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-8-foundations-icons-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-8-foundations-icons-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-8-foundations-icons-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-9-foundations-icons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-9-foundations-icons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-9-foundations-icons-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1886,9 +2014,9 @@ export const AllIcons = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Infobanner</h2>
       <div class="badges">
-        <label for="c-9-design-system-info-banner-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-9-design-system-info-banner-info" class="badge info as-toggle">1 info</label>
-        <label for="c-9-design-system-info-banner-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-10-design-system-info-banner-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-10-design-system-info-banner-info" class="badge info as-toggle">1 info</label>
+        <label for="c-10-design-system-info-banner-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -1900,9 +2028,9 @@ export const AllIcons = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-9-design-system-info-banner-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-9-design-system-info-banner-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-9-design-system-info-banner-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-10-design-system-info-banner-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-10-design-system-info-banner-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-10-design-system-info-banner-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -1999,9 +2127,9 @@ export const Default = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Modals</h2>
       <div class="badges">
-        <label for="c-10-components-modals-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-10-components-modals-info" class="badge info as-toggle">1 info</label>
-        <label for="c-10-components-modals-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-11-components-modals-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-11-components-modals-info" class="badge info as-toggle">1 info</label>
+        <label for="c-11-components-modals-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -2013,9 +2141,9 @@ export const Default = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-10-components-modals-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-10-components-modals-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-10-components-modals-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-11-components-modals-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-11-components-modals-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-11-components-modals-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2151,8 +2279,8 @@ export const Logout = {
       <h2><span class="status-dot dot-ok"></span> Pagination</h2>
       <div class="badges">
         
-        <label for="c-11-components-pagination-info" class="badge info as-toggle">1 info</label>
-        <label for="c-11-components-pagination-stories" class="badge ok as-toggle">3 stories</label>
+        <label for="c-12-components-pagination-info" class="badge info as-toggle">1 info</label>
+        <label for="c-12-components-pagination-stories" class="badge ok as-toggle">3 stories</label>
         
         
       </div>
@@ -2165,8 +2293,8 @@ export const Logout = {
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-11-components-pagination-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-11-components-pagination-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-12-components-pagination-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-12-components-pagination-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2239,9 +2367,9 @@ export const Logout = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Searchfield</h2>
       <div class="badges">
-        <label for="c-12-design-system-search-field-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-12-design-system-search-field-info" class="badge info as-toggle">1 info</label>
-        <label for="c-12-design-system-search-field-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-13-design-system-search-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-13-design-system-search-field-info" class="badge info as-toggle">1 info</label>
+        <label for="c-13-design-system-search-field-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -2253,9 +2381,9 @@ export const Logout = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-12-design-system-search-field-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-12-design-system-search-field-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-12-design-system-search-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-13-design-system-search-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-13-design-system-search-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-13-design-system-search-field-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2361,9 +2489,9 @@ export const States = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Select</h2>
       <div class="badges">
-        <label for="c-13-design-system-select-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-13-design-system-select-info" class="badge info as-toggle">1 info</label>
-        <label for="c-13-design-system-select-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-14-design-system-select-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-14-design-system-select-info" class="badge info as-toggle">1 info</label>
+        <label for="c-14-design-system-select-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -2375,9 +2503,9 @@ export const States = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-13-design-system-select-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-13-design-system-select-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-13-design-system-select-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-14-design-system-select-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-14-design-system-select-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-14-design-system-select-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2505,8 +2633,8 @@ export const Variants = {
       <h2><span class="status-dot dot-ok"></span> Stepper</h2>
       <div class="badges">
         
-        <label for="c-14-components-stepper-info" class="badge info as-toggle">1 info</label>
-        <label for="c-14-components-stepper-stories" class="badge ok as-toggle">4 stories</label>
+        <label for="c-15-components-stepper-info" class="badge info as-toggle">1 info</label>
+        <label for="c-15-components-stepper-stories" class="badge ok as-toggle">4 stories</label>
         
         
       </div>
@@ -2519,8 +2647,8 @@ export const Variants = {
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-14-components-stepper-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-14-components-stepper-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-15-components-stepper-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-15-components-stepper-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2605,9 +2733,9 @@ export const Variants = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Storagelogos</h2>
       <div class="badges">
-        <label for="c-15-foundations-storage-logos-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-15-foundations-storage-logos-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-15-foundations-storage-logos-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-16-foundations-storage-logos-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-16-foundations-storage-logos-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-16-foundations-storage-logos-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -2619,9 +2747,9 @@ export const Variants = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-15-foundations-storage-logos-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-15-foundations-storage-logos-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-15-foundations-storage-logos-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-16-foundations-storage-logos-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-16-foundations-storage-logos-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-16-foundations-storage-logos-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2737,9 +2865,9 @@ export const AllLogos = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Textfield</h2>
       <div class="badges">
-        <label for="c-16-design-system-text-field-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-16-design-system-text-field-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-16-design-system-text-field-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-17-design-system-text-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-17-design-system-text-field-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-17-design-system-text-field-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -2751,9 +2879,9 @@ export const AllLogos = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-16-design-system-text-field-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-16-design-system-text-field-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-16-design-system-text-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-17-design-system-text-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-17-design-system-text-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-17-design-system-text-field-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2891,8 +3019,8 @@ export const States = {
       <h2><span class="status-dot dot-ok"></span> Toggle</h2>
       <div class="badges">
         
-        <label for="c-17-components-toggle-info" class="badge info as-toggle">1 info</label>
-        <label for="c-17-components-toggle-stories" class="badge ok as-toggle">3 stories</label>
+        <label for="c-18-components-toggle-info" class="badge info as-toggle">1 info</label>
+        <label for="c-18-components-toggle-stories" class="badge ok as-toggle">3 stories</label>
         
         
       </div>
@@ -2905,8 +3033,8 @@ export const States = {
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-17-components-toggle-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-17-components-toggle-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-18-components-toggle-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-18-components-toggle-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -2984,9 +3112,9 @@ export const States = {
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Tooltip</h2>
       <div class="badges">
-        <label for="c-18-components-tooltip-props" class="badge ok as-toggle">1 prop type</label>
-        <label for="c-18-components-tooltip-info" class="badge info as-toggle">1 info</label>
-        <label for="c-18-components-tooltip-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-19-components-tooltip-props" class="badge ok as-toggle">1 prop type</label>
+        <label for="c-19-components-tooltip-info" class="badge info as-toggle">1 info</label>
+        <label for="c-19-components-tooltip-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -2999,11 +3127,11 @@ export const States = {
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
   
-  <input id="c-18-components-tooltip-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-18-components-tooltip-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-19-components-tooltip-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-19-components-tooltip-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
-  <input id="c-18-components-tooltip-props" class="tg tg-props" type="checkbox" hidden />
+  <input id="c-19-components-tooltip-props" class="tg tg-props" type="checkbox" hidden />
 
   <div class="panels">
     
@@ -3087,9 +3215,9 @@ export const States = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Typography</h2>
       <div class="badges">
-        <label for="c-19-foundations-typography-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-19-foundations-typography-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-19-foundations-typography-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-20-foundations-typography-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-20-foundations-typography-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-20-foundations-typography-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -3101,9 +3229,9 @@ export const States = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-19-foundations-typography-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-19-foundations-typography-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-19-foundations-typography-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-20-foundations-typography-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-20-foundations-typography-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-20-foundations-typography-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -3219,9 +3347,137 @@ export const Scale = {
           <label for="no-component-found-toggle" class="group-header">
             <span class="caret">▸</span>
             <span class="group-title">No component found</span>
-            <span class="group-count">15</span>
+            <span class="group-count">16</span>
           </label>
           <div class="group-cards">
+<article
+  class="card 
+  has-error 
+  has-info 
+  no-story-error
+  no-doc-error"
+  role="listitem"
+  aria-label="Alert">
+  <div class="head">
+    <div class="title">
+      <h2><span class="status-dot dot-err"></span> Alert</h2>
+      <div class="badges">
+        <label for="c-error-0-design-system-alert-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-0-design-system-alert-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-0-design-system-alert-stories" class="badge ok as-toggle">2 stories</label>
+        
+        
+      </div>
+    </div>
+    <div class="meta" title="./src/stories/Alert.stories.jsx">design-system-alert · ./src/stories/Alert.stories.jsx</div>
+    
+    
+    
+  </div>
+
+  <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
+  <input id="c-error-0-design-system-alert-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-0-design-system-alert-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-0-design-system-alert-stories" class="tg tg-stories" type="checkbox" hidden />
+  
+  
+  
+
+  <div class="panels">
+    
+        <div class="panel panel-err">
+          
+    <div class="note err">
+      <div class="note-title">Prop type error</div>
+      <div class="note-body"><pre><code>We could not detect the component from your story file. Specify meta.component.
+  4 | // Figma: UI kit → Alert. The app uses the success variant as a toast shown after
+  5 | // creating or deleting a share (SharesPage `.toast`).
+&gt; 6 | const meta = {
+    | ^
+  7 |   title: &#39;Design System/Alert&#39;,
+  8 |   parameters: { layout: &#39;padded&#39; },
+  9 |   tags: [&#39;autodocs&#39;],
+
+./src/stories/Alert.stories.jsx:
+import React from &#39;react&#39;;
+import { IconCheckCircle, IconDismiss } from &#39;../ui/icons.jsx&#39;;
+
+// Figma: UI kit → Alert. The app uses the success variant as a toast shown after
+// creating or deleting a share (SharesPage `.toast`).
+const meta = {
+  title: &#39;Design System/Alert&#39;,
+  parameters: { layout: &#39;padded&#39; },
+  tags: [&#39;autodocs&#39;],
+};
+export default meta;
+
+function Toast({ text }) {
+  return (
+    &lt;div className=&quot;toast&quot; role=&quot;status&quot;&gt;
+      &lt;span className=&quot;icon-box icon-20 toast__icon&quot;&gt;&lt;IconCheckCircle /&gt;&lt;/span&gt;
+      &lt;span className=&quot;t-sm-regular toast__text&quot;&gt;{text}&lt;/span&gt;
+      &lt;button type=&quot;button&quot; className=&quot;toast__close&quot; aria-label=&quot;Dismiss&quot;&gt;
+        &lt;span className=&quot;icon-box icon-16&quot;&gt;&lt;IconDismiss /&gt;&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+export const Success = {
+  render: () =&gt; &lt;Toast text={&#39;“SMB share” created successfully.&#39;} /&gt;,
+};
+
+export const Deletion = {
+  render: () =&gt; &lt;Toast text={&#39;“BackupNode-A” share successfully deleted&#39;} /&gt;,
+};
+</code></pre></div>
+    </div>
+        </div>
+    
+        <div class="panel panel-info">
+          
+    <div class="note info">
+      <div class="note-title">Info</div>
+      <div class="note-body">No description found. Write a jsdoc comment such as /** Component description */.</div>
+    </div>
+        </div>
+    
+    
+        <div class="panel panel-stories">
+          
+          
+          
+          <div class="note ok">
+                <div class="row">
+                  <span class="ex-name">Imports</span>
+                </div>
+                <pre><code>import { IconCheckCircle, IconDismiss } from "myworkdrive-admin";</code></pre>
+              </div>
+          
+          
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Success</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Success = () =&gt; &lt;Toast text={&#39;“SMB share” created successfully.&#39;} /&gt;;</code></pre>
+            </div>
+            <div class="note ok">
+              <div class="row">
+                <span class="ex-name">Deletion</span>
+                <span class="badge ok">story ok</span>
+              </div>
+              
+              
+              <pre><code>const Deletion = () =&gt; &lt;Toast text={&#39;“BackupNode-A” share successfully deleted&#39;} /&gt;;</code></pre>
+            </div>
+        </div>
+    
+    
+  </div>
+</article>
 <article
   class="card 
   has-error 
@@ -3234,9 +3490,9 @@ export const Scale = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Badges</h2>
       <div class="badges">
-        <label for="c-error-0-design-system-badges-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-0-design-system-badges-info" class="badge info as-toggle">1 info</label>
-        <label for="c-error-0-design-system-badges-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-error-1-design-system-badges-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-1-design-system-badges-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-1-design-system-badges-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -3248,9 +3504,9 @@ export const Scale = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-0-design-system-badges-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-0-design-system-badges-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-0-design-system-badges-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-1-design-system-badges-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-1-design-system-badges-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-1-design-system-badges-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -3401,9 +3657,9 @@ export const StatusIcons = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Breadcrumbs</h2>
       <div class="badges">
-        <label for="c-error-1-design-system-breadcrumbs-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-1-design-system-breadcrumbs-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-1-design-system-breadcrumbs-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-2-design-system-breadcrumbs-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-2-design-system-breadcrumbs-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-2-design-system-breadcrumbs-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -3415,9 +3671,9 @@ export const StatusIcons = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-1-design-system-breadcrumbs-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-1-design-system-breadcrumbs-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-1-design-system-breadcrumbs-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-2-design-system-breadcrumbs-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-2-design-system-breadcrumbs-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-2-design-system-breadcrumbs-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -3514,9 +3770,9 @@ export const Default = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Buttons</h2>
       <div class="badges">
-        <label for="c-error-2-design-system-buttons-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-2-design-system-buttons-info" class="badge info as-toggle">1 info</label>
-        <label for="c-error-2-design-system-buttons-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-3-design-system-buttons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-3-design-system-buttons-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-3-design-system-buttons-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -3528,9 +3784,9 @@ export const Default = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-2-design-system-buttons-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-2-design-system-buttons-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-2-design-system-buttons-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-3-design-system-buttons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-3-design-system-buttons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-3-design-system-buttons-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -3693,9 +3949,9 @@ export const Variants = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Chip</h2>
       <div class="badges">
-        <label for="c-error-3-design-system-chip-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-3-design-system-chip-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-3-design-system-chip-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-error-4-design-system-chip-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-4-design-system-chip-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-4-design-system-chip-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -3707,9 +3963,9 @@ export const Variants = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-3-design-system-chip-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-3-design-system-chip-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-3-design-system-chip-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-4-design-system-chip-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-4-design-system-chip-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-4-design-system-chip-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -3837,9 +4093,9 @@ export const Interactive = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Colors</h2>
       <div class="badges">
-        <label for="c-error-4-foundations-colors-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-4-foundations-colors-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-4-foundations-colors-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-5-foundations-colors-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-5-foundations-colors-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-5-foundations-colors-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -3851,9 +4107,9 @@ export const Interactive = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-4-foundations-colors-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-4-foundations-colors-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-4-foundations-colors-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-5-foundations-colors-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-5-foundations-colors-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-5-foundations-colors-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -3993,9 +4249,9 @@ export const Palette = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Featuredicon</h2>
       <div class="badges">
-        <label for="c-error-5-design-system-featured-icon-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-5-design-system-featured-icon-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-5-design-system-featured-icon-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-6-design-system-featured-icon-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-6-design-system-featured-icon-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-6-design-system-featured-icon-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4007,9 +4263,9 @@ export const Palette = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-5-design-system-featured-icon-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-5-design-system-featured-icon-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-5-design-system-featured-icon-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-6-design-system-featured-icon-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-6-design-system-featured-icon-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-6-design-system-featured-icon-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4118,9 +4374,9 @@ export const Variants = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Flags</h2>
       <div class="badges">
-        <label for="c-error-6-foundations-flags-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-6-foundations-flags-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-6-foundations-flags-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-7-foundations-flags-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-7-foundations-flags-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-7-foundations-flags-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4132,9 +4388,9 @@ export const Variants = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-6-foundations-flags-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-6-foundations-flags-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-6-foundations-flags-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-7-foundations-flags-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-7-foundations-flags-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-7-foundations-flags-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4253,9 +4509,9 @@ export const AllFlags = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Icons</h2>
       <div class="badges">
-        <label for="c-error-7-foundations-icons-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-7-foundations-icons-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-7-foundations-icons-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-8-foundations-icons-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-8-foundations-icons-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-8-foundations-icons-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4267,9 +4523,9 @@ export const AllFlags = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-7-foundations-icons-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-7-foundations-icons-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-7-foundations-icons-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-8-foundations-icons-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-8-foundations-icons-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-8-foundations-icons-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4387,9 +4643,9 @@ export const AllIcons = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Infobanner</h2>
       <div class="badges">
-        <label for="c-error-8-design-system-info-banner-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-8-design-system-info-banner-info" class="badge info as-toggle">1 info</label>
-        <label for="c-error-8-design-system-info-banner-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-9-design-system-info-banner-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-9-design-system-info-banner-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-9-design-system-info-banner-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4401,9 +4657,9 @@ export const AllIcons = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-8-design-system-info-banner-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-8-design-system-info-banner-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-8-design-system-info-banner-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-9-design-system-info-banner-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-9-design-system-info-banner-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-9-design-system-info-banner-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4500,9 +4756,9 @@ export const Default = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Modals</h2>
       <div class="badges">
-        <label for="c-error-9-components-modals-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-9-components-modals-info" class="badge info as-toggle">1 info</label>
-        <label for="c-error-9-components-modals-stories" class="badge ok as-toggle">2 stories</label>
+        <label for="c-error-10-components-modals-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-10-components-modals-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-10-components-modals-stories" class="badge ok as-toggle">2 stories</label>
         
         
       </div>
@@ -4514,9 +4770,9 @@ export const Default = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-9-components-modals-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-9-components-modals-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-9-components-modals-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-10-components-modals-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-10-components-modals-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-10-components-modals-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4651,9 +4907,9 @@ export const Logout = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Searchfield</h2>
       <div class="badges">
-        <label for="c-error-10-design-system-search-field-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-10-design-system-search-field-info" class="badge info as-toggle">1 info</label>
-        <label for="c-error-10-design-system-search-field-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-11-design-system-search-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-11-design-system-search-field-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-11-design-system-search-field-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4665,9 +4921,9 @@ export const Logout = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-10-design-system-search-field-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-10-design-system-search-field-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-10-design-system-search-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-11-design-system-search-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-11-design-system-search-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-11-design-system-search-field-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4773,9 +5029,9 @@ export const States = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Select</h2>
       <div class="badges">
-        <label for="c-error-11-design-system-select-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-11-design-system-select-info" class="badge info as-toggle">1 info</label>
-        <label for="c-error-11-design-system-select-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-12-design-system-select-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-12-design-system-select-info" class="badge info as-toggle">1 info</label>
+        <label for="c-error-12-design-system-select-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4787,9 +5043,9 @@ export const States = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-11-design-system-select-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-11-design-system-select-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-11-design-system-select-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-12-design-system-select-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-12-design-system-select-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-12-design-system-select-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -4916,9 +5172,9 @@ export const Variants = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Storagelogos</h2>
       <div class="badges">
-        <label for="c-error-12-foundations-storage-logos-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-12-foundations-storage-logos-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-12-foundations-storage-logos-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-13-foundations-storage-logos-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-13-foundations-storage-logos-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-13-foundations-storage-logos-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -4930,9 +5186,9 @@ export const Variants = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-12-foundations-storage-logos-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-12-foundations-storage-logos-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-12-foundations-storage-logos-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-13-foundations-storage-logos-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-13-foundations-storage-logos-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-13-foundations-storage-logos-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -5048,9 +5304,9 @@ export const AllLogos = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Textfield</h2>
       <div class="badges">
-        <label for="c-error-13-design-system-text-field-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-13-design-system-text-field-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-13-design-system-text-field-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-14-design-system-text-field-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-14-design-system-text-field-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-14-design-system-text-field-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -5062,9 +5318,9 @@ export const AllLogos = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-13-design-system-text-field-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-13-design-system-text-field-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-13-design-system-text-field-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-14-design-system-text-field-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-14-design-system-text-field-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-14-design-system-text-field-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   
@@ -5201,9 +5457,9 @@ export const States = {
     <div class="title">
       <h2><span class="status-dot dot-err"></span> Typography</h2>
       <div class="badges">
-        <label for="c-error-14-foundations-typography-err" class="badge err as-toggle">prop type error</label>
-        <label for="c-error-14-foundations-typography-info" class="badge info as-toggle">2 infos</label>
-        <label for="c-error-14-foundations-typography-stories" class="badge ok as-toggle">1 story</label>
+        <label for="c-error-15-foundations-typography-err" class="badge err as-toggle">prop type error</label>
+        <label for="c-error-15-foundations-typography-info" class="badge info as-toggle">2 infos</label>
+        <label for="c-error-15-foundations-typography-stories" class="badge ok as-toggle">1 story</label>
         
         
       </div>
@@ -5215,9 +5471,9 @@ export const States = {
   </div>
 
   <!-- ⬇️ Hidden toggles must be siblings BEFORE .panels -->
-  <input id="c-error-14-foundations-typography-err" class="tg tg-err" type="checkbox" hidden />
-  <input id="c-error-14-foundations-typography-info" class="tg tg-info" type="checkbox" hidden />
-  <input id="c-error-14-foundations-typography-stories" class="tg tg-stories" type="checkbox" hidden />
+  <input id="c-error-15-foundations-typography-err" class="tg tg-err" type="checkbox" hidden />
+  <input id="c-error-15-foundations-typography-info" class="tg tg-info" type="checkbox" hidden />
+  <input id="c-error-15-foundations-typography-stories" class="tg tg-stories" type="checkbox" hidden />
   
   
   

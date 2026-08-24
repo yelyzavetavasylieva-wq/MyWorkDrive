@@ -134,17 +134,18 @@ button.step__circle { cursor: pointer; }
 }
 .info-banner__icon { color: var(--fg-brand); }
 
-.ug-empty { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs); padding: 40px 16px; }
+.ug-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--spacing-xs); padding: 40px 16px; }
 .ug-empty .featured-icon { margin-bottom: var(--spacing-lg); }
 .ug-empty__desc { color: var(--text-tertiary); }
 .featured-icon--gray { background: var(--bg-tertiary); color: var(--fg-quaternary); }
 .featured-icon--warning { background: #fef0c7; color: var(--fg-warning); }
 
 /* ============================ Add Users modal ============================ */
-.modal--wide { max-width: 860px; }
-.modal--wide__header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border-secondary); }
+.modal--wide { max-width: 860px; position: relative; }
+.modal--wide__header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 20px 24px; border-bottom: 1px solid var(--border-secondary); }
 .modal--wide__header h2 { color: var(--text-primary-2); }
 .modal__close--inline { position: static; }
+.modal--wide .modal__close { position: absolute; top: 16px; right: 16px; }
 .ug-panes { display: grid; grid-template-columns: 1fr 1fr; }
 .ug-pane { padding: var(--spacing-3xl); display: flex; flex-direction: column; min-height: 420px; }
 .ug-pane--list { border-right: 1px solid var(--border-secondary); }
@@ -155,7 +156,7 @@ button.step__circle { cursor: pointer; }
 .chip { border: none; background: var(--bg-tertiary); color: var(--text-secondary); border-radius: var(--radius-full); padding: 4px 12px; cursor: pointer; font-size: 14px; line-height: 20px; }
 .chip--active { background: var(--bg-primary); color: var(--text-secondary); box-shadow: inset 0 0 0 1px var(--brand-200); }
 .dir-list { display: flex; flex-direction: column; overflow-y: auto; max-height: 320px; }
-.dir-item { display: flex; align-items: center; gap: var(--spacing-md); padding: 9px 8px; border: none; background: none; cursor: pointer; text-align: left; border-radius: var(--radius-sm); width: 100%; }
+.dir-item { display: flex; align-items: center; gap: var(--spacing-md); height: 40px; flex-shrink: 0; padding: 0 8px; border: none; background: none; cursor: pointer; text-align: left; border-radius: var(--radius-sm); width: 100%; }
 .dir-item:hover { background: var(--bg-active); }
 .dir-item__icon { color: var(--fg-secondary); }
 .dir-item__name { flex: 1 1 0; min-width: 0; color: var(--text-primary-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

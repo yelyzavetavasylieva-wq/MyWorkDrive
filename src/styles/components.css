@@ -165,7 +165,7 @@
 .assigned-modal__search { width: 100%; }
 .assigned-modal__body .chip-group { margin-bottom: 0; }
 .assigned-modal__body .dir-list { flex: 1 1 0; max-height: none; }
-.assigned-row { display: flex; align-items: center; gap: var(--spacing-md); height: 40px; padding: 0 8px; }
+.assigned-row { display: flex; align-items: center; gap: var(--spacing-md); height: 40px; flex-shrink: 0; padding: 0 8px; }
 .assigned-row .dir-item__icon { color: var(--fg-quaternary); }
 .assigned-row .dir-item__name { color: var(--text-secondary); }
 
@@ -188,6 +188,11 @@
 .data-table tbody tr:hover .perm-empty { background: transparent; }
 .row--selected:hover .td { background: var(--bg-active); }
 .td--empty { text-align: center; color: var(--text-tertiary); padding: 32px 16px; }
+/* Shares table empty state (no data / no search results) */
+.table-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--spacing-xs); padding: 16px; }
+.table-empty .featured-icon { margin-bottom: var(--spacing-lg); }
+.table-empty__desc { color: var(--text-tertiary); }
+.table-empty .btn { margin-top: var(--spacing-xl); }
 
 /* ============================ Pagination ============================ */
 .pagination { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-lg); }
