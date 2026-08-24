@@ -181,7 +181,7 @@ export default function SharesPage() {
           </div>
           {selectedCount > 0 && (
             <button type="button" className="btn btn--secondary" onClick={() => setDeleteOpen(true)}>
-              <span className="icon-box icon-20"><IconTrash /></span>Delete
+              <span className="icon-box icon-20 btn__icon--danger"><IconTrash /></span>Delete
             </button>
           )}
         </div>

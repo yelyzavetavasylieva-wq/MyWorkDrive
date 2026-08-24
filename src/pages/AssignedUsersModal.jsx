@@ -43,7 +43,7 @@ export default function AssignedUsersModal({ open, onClose, share }) {
 
   return (
     <div className="modal-overlay" onMouseDown={onClose}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="assigned-title" onMouseDown={(e) => e.stopPropagation()}>
+      <div className="modal modal--assigned" role="dialog" aria-modal="true" aria-labelledby="assigned-title" onMouseDown={(e) => e.stopPropagation()}>
         <div className="assigned-modal__header">
           <div className="assigned-modal__titles">
             <h2 id="assigned-title" className="t-lg-semibold assigned-modal__title">Assigned Users &amp; Groups</h2>

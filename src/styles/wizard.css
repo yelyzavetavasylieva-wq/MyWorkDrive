@@ -1,6 +1,6 @@
 /* ============================ Wizard shell ============================ */
 .wizard { display: flex; flex-direction: column; }
-.breadcrumbs { display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-2xl); }
+.breadcrumbs { display: flex; align-items: center; gap: var(--spacing-lg); margin-bottom: var(--spacing-2xl); }
 .breadcrumbs__link { color: var(--text-brand-link); }
 .breadcrumbs__link--muted { color: var(--text-tertiary); }
 .breadcrumbs__link--muted:hover { color: var(--text-secondary); }
@@ -152,7 +152,7 @@ button.step__circle { cursor: pointer; }
 .ug-hint { color: var(--text-tertiary); margin-bottom: var(--spacing-lg); }
 .chip-group { display: flex; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
 .chip { border: none; background: var(--bg-tertiary); color: var(--text-secondary); border-radius: var(--radius-full); padding: 4px 12px; cursor: pointer; font-size: 14px; line-height: 20px; }
-.chip--active { background: var(--text-secondary); color: #fff; }
+.chip--active { background: var(--bg-primary); color: var(--text-secondary); box-shadow: inset 0 0 0 1px var(--brand-200); }
 .dir-list { display: flex; flex-direction: column; overflow-y: auto; max-height: 320px; }
 .dir-item { display: flex; align-items: center; gap: var(--spacing-md); padding: 9px 8px; border: none; background: none; cursor: pointer; text-align: left; border-radius: var(--radius-sm); width: 100%; }
 .dir-item:hover { background: var(--bg-active); }

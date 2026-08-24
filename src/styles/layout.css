@@ -27,7 +27,7 @@
 }
 .sidebar--collapsed .sidebar__header { justify-content: center; padding: 0; }
 .sidebar__logo { display: inline-flex; }
-.sidebar__logo svg { display: block; height: 32px; width: auto; }
+.sidebar__logo svg { display: block; height: 28px; width: auto; }
 
 .icon-btn {
   display: inline-flex; align-items: center; justify-content: center;

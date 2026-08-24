@@ -140,24 +140,30 @@
 
 /* Table toolbar: search + (conditional) bulk delete */
 .table-toolbar { display: flex; align-items: center; gap: var(--spacing-lg); }
+.btn__icon--danger { color: var(--fg-error); }
 
 /* Drive Letter cell dropdown */
 .select--drive { width: 61px; }
 .select--drive .select__native { height: 32px; padding: 0 28px 0 10px; }
 .select--drive .select__chevron { right: 8px; }
 
-/* Assigned Users & Groups modal (opened from the "More" link) */
+/* Assigned Users & Groups modal (opened from the "More" link) — fixed 480x768 */
+.modal--assigned { position: relative; max-width: 480px; height: 768px; max-height: calc(100vh - 48px); display: flex; flex-direction: column; }
 .assigned-modal__header {
+  position: relative;
   display: flex; align-items: flex-start; justify-content: space-between;
-  padding: 20px 24px; border-bottom: 1px solid var(--border-secondary);
+  padding: 24px; border-bottom: 1px solid var(--border-secondary); flex-shrink: 0;
 }
+.modal--assigned .modal__close { position: absolute; top: 16px; right: 16px; }
 .assigned-modal__titles { display: flex; flex-direction: column; gap: var(--spacing-xxs); }
 .assigned-modal__title { color: var(--text-primary-2); }
 .assigned-modal__subtitle { color: var(--text-tertiary); }
-.assigned-modal__body { padding: var(--spacing-xl) var(--spacing-3xl) var(--spacing-3xl); display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.assigned-modal__body { flex: 1 1 0; min-height: 0; padding: var(--spacing-xl) var(--spacing-3xl) var(--spacing-3xl); display: flex; flex-direction: column; gap: var(--spacing-lg); }
 .assigned-modal__count { color: var(--text-tertiary); }
 .assigned-modal__search { width: 100%; }
+.assigned-modal__body .dir-list { flex: 1 1 0; max-height: none; }
 .assigned-row { display: flex; align-items: center; gap: var(--spacing-md); padding: 9px 8px; }
+.assigned-row .dir-item__icon { color: var(--fg-quaternary); }
 .assigned-row .dir-item__name { color: var(--text-secondary); }
 
 /* Success toast (share deletion) */
