@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconPlus, IconImport } from '../ui/wizard-icons.jsx';
+import { IconPlus, IconImport, IconTrash } from '../ui/wizard-icons.jsx';
 import { IconEdit, IconCheckCircle } from '../ui/icons.jsx';
 
 // Figma: UI kit → Buttons (Button, Button destructive). Implemented as the
@@ -25,6 +25,10 @@ export const Variants = {
         <button type="button" className="btn btn--primary">Primary</button>
         <button type="button" className="btn btn--secondary">Secondary</button>
         <button type="button" className="btn btn--destructive">Destructive</button>
+        <button type="button" className="btn btn--destructive-secondary">Destructive secondary</button>
+      </Row>
+      <Row label="Destructive secondary with icon (bulk delete)">
+        <button type="button" className="btn btn--destructive-secondary"><span className="icon-box icon-20"><IconTrash /></span>Delete</button>
       </Row>
       <Row label="Small (.btn--sm)">
         <button type="button" className="btn btn--primary btn--sm">Primary</button>

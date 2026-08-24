@@ -27,12 +27,14 @@ export default function AddUsersModal({ open, onClose, initialIds, onConfirm }) 
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  // Left pane shows only unassigned entries; clicking one moves it to the right.
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     return DIRECTORY.filter((d) =>
+      !assigned.has(d.id) &&
       (filter === 'all' || d.type === filter) && (!q || d.name.toLowerCase().includes(q))
     );
-  }, [query, filter]);
+  }, [query, filter, assigned]);
 
   const assignedItems = useMemo(() => DIRECTORY.filter((d) => assigned.has(d.id)), [assigned]);
 
@@ -66,16 +68,12 @@ export default function AddUsersModal({ open, onClose, initialIds, onConfirm }) 
               ))}
             </div>
             <div className="dir-list">
-              {list.map((d) => {
-                const isAssigned = assigned.has(d.id);
-                return (
-                  <button key={d.id} type="button" className={'dir-item' + (isAssigned ? ' is-assigned' : '')} onClick={() => (isAssigned ? remove(d.id) : add(d.id))}>
-                    <Avatar type={d.type} />
-                    <span className="t-sm-regular dir-item__name">{d.name}</span>
-                    {isAssigned && <span className="t-sm-regular dir-item__added">Added</span>}
-                  </button>
-                );
-              })}
+              {list.map((d) => (
+                <button key={d.id} type="button" className="dir-item" onClick={() => add(d.id)}>
+                  <Avatar type={d.type} />
+                  <span className="t-sm-regular dir-item__name">{d.name}</span>
+                </button>
+              ))}
               {list.length === 0 && <p className="t-sm-regular ug-empty-text">No matches.</p>}
             </div>
           </div>
@@ -85,7 +83,7 @@ export default function AddUsersModal({ open, onClose, initialIds, onConfirm }) 
             <h3 className="t-sm-semibold ug-pane__title">Assigned Users &amp; Groups</h3>
             {assignedItems.length === 0 ? (
               <div className="ug-empty">
-                <span className="featured-icon featured-icon--gray"><span className="icon-box icon-20"><IconUsersGroup /></span></span>
+                <span className="featured-icon featured-icon--gray"><span className="icon-box icon-24"><IconUsersGroup /></span></span>
                 <p className="t-md-semibold">No assigned Users &amp; Groups yet</p>
                 <p className="t-sm-regular ug-empty__desc">To add user or group, simply click it in the List of Users &amp; Groups</p>
               </div>

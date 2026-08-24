@@ -1,0 +1,24 @@
+import{n as e,r as t}from"./rolldown-runtime-DkW27tQK.js";import{f as n,n as r}from"./iframe-Dz0QWbzT.js";var i=t({FLAGS:()=>h,FlagDE:()=>s,FlagES:()=>f,FlagFR:()=>c,FlagGB:()=>o,FlagNL:()=>d,FlagPT:()=>l,FlagSE:()=>u});function a({children:e}){return(0,p.jsxs)(`svg`,{width:`20`,height:`15`,viewBox:`0 0 20 15`,style:m,xmlns:`http://www.w3.org/2000/svg`,"aria-hidden":`true`,children:[(0,p.jsx)(`defs`,{children:(0,p.jsx)(`clipPath`,{id:`fclip`,children:(0,p.jsx)(`rect`,{width:`20`,height:`15`,rx:`2`})})}),(0,p.jsx)(`g`,{clipPath:`url(#fclip)`,children:e}),(0,p.jsx)(`rect`,{x:`0.5`,y:`0.5`,width:`19`,height:`14`,rx:`1.5`,fill:`none`,stroke:`rgba(0,0,0,0.1)`})]})}function o(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`20`,height:`15`,fill:`#012169`}),(0,p.jsx)(`path`,{d:`M0 0L20 15M20 0L0 15`,stroke:`#fff`,strokeWidth:`3`}),(0,p.jsx)(`path`,{d:`M0 0L20 15M20 0L0 15`,stroke:`#C8102E`,strokeWidth:`1.5`}),(0,p.jsx)(`path`,{d:`M10 0V15M0 7.5H20`,stroke:`#fff`,strokeWidth:`5`}),(0,p.jsx)(`path`,{d:`M10 0V15M0 7.5H20`,stroke:`#C8102E`,strokeWidth:`3`})]})}function s(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`20`,height:`5`,y:`0`,fill:`#000`}),(0,p.jsx)(`rect`,{width:`20`,height:`5`,y:`5`,fill:`#DD0000`}),(0,p.jsx)(`rect`,{width:`20`,height:`5`,y:`10`,fill:`#FFCE00`})]})}function c(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`6.67`,height:`15`,x:`0`,fill:`#0055A4`}),(0,p.jsx)(`rect`,{width:`6.67`,height:`15`,x:`6.67`,fill:`#fff`}),(0,p.jsx)(`rect`,{width:`6.67`,height:`15`,x:`13.33`,fill:`#EF4135`})]})}function l(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`8`,height:`15`,x:`0`,fill:`#046A38`}),(0,p.jsx)(`rect`,{width:`12`,height:`15`,x:`8`,fill:`#DA291C`}),(0,p.jsx)(`circle`,{cx:`8`,cy:`7.5`,r:`2.6`,fill:`#FFE900`,stroke:`#fff`,strokeWidth:`0.5`})]})}function u(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`20`,height:`15`,fill:`#006AA7`}),(0,p.jsx)(`rect`,{x:`6`,y:`0`,width:`2.5`,height:`15`,fill:`#FECC00`}),(0,p.jsx)(`rect`,{x:`0`,y:`6.25`,width:`20`,height:`2.5`,fill:`#FECC00`})]})}function d(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`20`,height:`5`,y:`0`,fill:`#AE1C28`}),(0,p.jsx)(`rect`,{width:`20`,height:`5`,y:`5`,fill:`#fff`}),(0,p.jsx)(`rect`,{width:`20`,height:`5`,y:`10`,fill:`#21468B`})]})}function f(){return(0,p.jsxs)(a,{children:[(0,p.jsx)(`rect`,{width:`20`,height:`15`,fill:`#AA151B`}),(0,p.jsx)(`rect`,{width:`20`,height:`7.5`,y:`3.75`,fill:`#F1BF00`})]})}var p,m,h;function g(){return(g=e((()=>{n(),p=r(),m={display:`block`,borderRadius:2},h={en:o,de:s,fr:c,pt:l,sv:u,nl:d,es:f},o.__docgenInfo={description:``,methods:[],displayName:`FlagGB`},s.__docgenInfo={description:``,methods:[],displayName:`FlagDE`},c.__docgenInfo={description:``,methods:[],displayName:`FlagFR`},l.__docgenInfo={description:``,methods:[],displayName:`FlagPT`},u.__docgenInfo={description:``,methods:[],displayName:`FlagSE`},d.__docgenInfo={description:``,methods:[],displayName:`FlagNL`},f.__docgenInfo={description:``,methods:[],displayName:`FlagES`}})))()}var _,v,y,b,x;function S(){return(S=e((()=>{n(),g(),_=r(),v={title:`Foundations/Flags`,parameters:{layout:`fullscreen`,docs:{description:{component:`National flags used by the language switcher, rendered at the 20×15 footprint.`}}},tags:[`autodocs`]},y=Object.entries(i).filter(([e,t])=>e.startsWith(`Flag`)&&typeof t==`function`),b={render:()=>(0,_.jsx)(`div`,{style:{padding:32,background:`var(--bg-primary)`,display:`grid`,gridTemplateColumns:`repeat(auto-fill, minmax(120px, 1fr))`,gap:16},children:y.map(([e,t])=>(0,_.jsxs)(`div`,{style:{display:`flex`,alignItems:`center`,gap:10,padding:12,border:`1px solid var(--border-card)`,borderRadius:`var(--radius-md)`},children:[(0,_.jsx)(t,{}),(0,_.jsx)(`code`,{style:{fontSize:12,color:`var(--text-tertiary)`},children:e})]},e))})},b.parameters={...b.parameters,docs:{...b.parameters?.docs,source:{originalSource:`{
+  render: () => <div style={{
+    padding: 32,
+    background: 'var(--bg-primary)',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+    gap: 16
+  }}>\r
+      {entries.map(([name, Flag]) => <div key={name} style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      padding: 12,
+      border: '1px solid var(--border-card)',
+      borderRadius: 'var(--radius-md)'
+    }}>\r
+          <Flag />\r
+          <code style={{
+        fontSize: 12,
+        color: 'var(--text-tertiary)'
+      }}>{name}</code>\r
+        </div>)}\r
+    </div>
+}`,...b.parameters?.docs?.source}}},x=[`AllFlags`]})))()}S();export{b as AllFlags,x as __namedExportsOrder,v as default};

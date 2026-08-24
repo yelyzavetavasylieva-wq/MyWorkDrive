@@ -6,7 +6,7 @@
 .breadcrumbs__link--muted:hover { color: var(--text-secondary); }
 .breadcrumbs__sep { color: var(--text-quaternary); }
 .wizard__title { color: var(--text-primary); margin-bottom: var(--spacing-3xl); }
-.wizard__body { margin-top: var(--spacing-4xl); }
+.wizard__body { margin-top: 48px; }
 .wizard__footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--spacing-4xl); }
 
 /* ============================ Stepper ============================ */
@@ -72,7 +72,8 @@ button.step__circle { cursor: pointer; }
 
 /* ============================ Forms (steps 2 & 3) ============================ */
 .form-card { border: 1px solid var(--border-card); border-radius: var(--radius-md); background: var(--bg-primary); padding: var(--spacing-3xl); display: flex; flex-direction: column; gap: var(--spacing-2xl); }
-.form-field { display: flex; flex-direction: column; gap: var(--spacing-sm); max-width: 512px; }
+/* Text fields fill half the container; fixed-size controls (selects) keep their own width */
+.form-field { display: flex; flex-direction: column; gap: var(--spacing-sm); max-width: 50%; }
 .form-label { color: var(--text-secondary); }
 .req { color: var(--fg-error); }
 .text-input {

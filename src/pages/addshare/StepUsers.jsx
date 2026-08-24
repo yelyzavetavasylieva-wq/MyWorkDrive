@@ -66,7 +66,7 @@ export default function StepUsers({ rows, setRows }) {
                   {c.disabled ? (
                     <span className="perm-th__disabled">
                       <span className="t-xs-semibold th__label">{c.label}</span>
-                      <Tooltip label="Guest access is disabled — turned off in Settings." placement="right">
+                      <Tooltip label="Guest access is disabled — turned off in Settings." placement="left">
                         <span className="icon-box icon-16 perm-th__help"><IconQuestionCircle /></span>
                       </Tooltip>
                     </span>
@@ -101,7 +101,7 @@ export default function StepUsers({ rows, setRows }) {
               <tr>
                 <td className="td perm-empty" colSpan={PERMISSION_COLUMNS.length + 1}>
                   <div className="ug-empty">
-                    <span className="featured-icon featured-icon--gray"><span className="icon-box icon-20"><IconUsersGroup /></span></span>
+                    <span className="featured-icon featured-icon--gray"><span className="icon-box icon-24"><IconUsersGroup /></span></span>
                     <p className="t-md-semibold">{rows.length === 0 ? 'No users or groups assigned' : `No matches for “${query}”`}</p>
                     {rows.length === 0 && <p className="t-sm-regular ug-empty__desc">Select which users or groups should have access to this share</p>}
                   </div>

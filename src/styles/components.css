@@ -21,6 +21,9 @@
 .btn--secondary:hover { background: var(--bg-active); }
 .btn--destructive { background: var(--bg-error-solid); color: var(--text-white); border-color: var(--border-tertiary); }
 .btn--destructive:hover { background: #c02618; }
+/* Destructive secondary: white surface with red text, border, and icon */
+.btn--destructive-secondary { background: var(--bg-primary); color: var(--fg-error); border-color: #fda29b; }
+.btn--destructive-secondary:hover { background: var(--bg-error-secondary); }
 .btn--block { flex: 1 1 0; }
 
 /* ============================ Toggle card ============================ */
@@ -140,7 +143,6 @@
 
 /* Table toolbar: search + (conditional) bulk delete */
 .table-toolbar { display: flex; align-items: center; gap: var(--spacing-lg); }
-.btn__icon--danger { color: var(--fg-error); }
 
 /* Drive Letter cell dropdown */
 .select--drive { width: 61px; }
@@ -152,17 +154,18 @@
 .assigned-modal__header {
   position: relative;
   display: flex; align-items: flex-start; justify-content: space-between;
-  padding: 24px; border-bottom: 1px solid var(--border-secondary); flex-shrink: 0;
+  padding: 20px 24px; border-bottom: 1px solid var(--border-secondary); flex-shrink: 0;
 }
 .modal--assigned .modal__close { position: absolute; top: 16px; right: 16px; }
-.assigned-modal__titles { display: flex; flex-direction: column; gap: var(--spacing-xxs); }
+.assigned-modal__titles { display: flex; flex-direction: column; gap: var(--spacing-xxs); min-width: 0; padding-right: 40px; }
 .assigned-modal__title { color: var(--text-primary-2); }
-.assigned-modal__subtitle { color: var(--text-tertiary); }
-.assigned-modal__body { flex: 1 1 0; min-height: 0; padding: var(--spacing-xl) var(--spacing-3xl) var(--spacing-3xl); display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.assigned-modal__subtitle { color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.assigned-modal__body { flex: 1 1 0; min-height: 0; padding: var(--spacing-xl) var(--spacing-3xl) var(--spacing-3xl); display: flex; flex-direction: column; gap: var(--spacing-xl); }
 .assigned-modal__count { color: var(--text-tertiary); }
 .assigned-modal__search { width: 100%; }
+.assigned-modal__body .chip-group { margin-bottom: 0; }
 .assigned-modal__body .dir-list { flex: 1 1 0; max-height: none; }
-.assigned-row { display: flex; align-items: center; gap: var(--spacing-md); padding: 9px 8px; }
+.assigned-row { display: flex; align-items: center; gap: var(--spacing-md); height: 40px; padding: 0 8px; }
 .assigned-row .dir-item__icon { color: var(--fg-quaternary); }
 .assigned-row .dir-item__name { color: var(--text-secondary); }
 
@@ -180,6 +183,9 @@
 
 .row--selected .td { background: var(--bg-active); }
 .data-table tbody tr:hover .td { background: var(--bg-secondary); }
+/* Empty-state rows are not interactive — no hover highlight */
+.data-table tbody tr:hover .td--empty,
+.data-table tbody tr:hover .perm-empty { background: transparent; }
 .row--selected:hover .td { background: var(--bg-active); }
 .td--empty { text-align: center; color: var(--text-tertiary); padding: 32px 16px; }
 
