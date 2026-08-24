@@ -35,10 +35,10 @@ Figma file key `2KzrZEcTwc7s3W46RI1eUN` ("MyWorkDrive"), one page "UI kit" conta
 
 ## Storybook
 Stories are grouped **Foundations → Design System → Components** (sort order in `.storybook/preview.jsx`, which also imports all five global stylesheets so components render with real tokens).
-- **Foundations**: Colors, Typography, Icons, Storage logos, Flags (galleries auto-generated via `import * as`).
-- **Design System** (CSS-class primitives rendered as markup): Buttons, Text field, Select, Search field, Chip, Badges, Featured icon, Info banner, Breadcrumbs.
+- **Foundations**: Colors, Color usage, Typography, Icons, Storage logos, Flags (galleries auto-generated via `import * as`).
+- **Design System** (CSS-class primitives rendered as markup): Buttons, Text field, Select, Search field, Chip, Badges, Featured icon, Info banner, Breadcrumbs, Alert, Tabs, Progress bar, Tag, Label, Notification, Page header, Table, Sidebar navigation, Metric item, Integration card, Date picker.
 - **Components** (real React components): Toggle, Checkbox, Tooltip, Pagination, Stepper, Modals.
-Only components that exist in code are storied; Figma-only pieces (Tabs, full Notifications, Progress bar, Date picker, Metric item, Integration card, Alert, Label, File type icon) are intentionally not invented.
+The whole Figma "UI kit" page is now storied. Elements already used by the app (Page header, Table, Sidebar navigation) reference their existing CSS; the remaining Figma-only pieces (Tabs, Progress bar, Tag, Label, Notification, Metric item, Integration card, Date picker) were built as faithful CSS under the "UI-kit catalog components" section of `components.css`. Only the **File type icon** set (~40 SVGs) is intentionally still out of scope.
 
 ## Conventions
 - Match existing code style: plain CSS with tokens, semantic class names, `currentColor` icons via `icon-box`/`icon-NN` sizing classes.
