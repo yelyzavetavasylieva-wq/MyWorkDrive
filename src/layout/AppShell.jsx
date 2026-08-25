@@ -14,7 +14,7 @@ export default function AppShell() {
   const userBtnRef = useRef(null);
   const menuRef = useRef(null);
 
-  const inWizard = location.pathname === '/shares/new';
+  const inWizard = location.pathname === '/shares/new' || location.pathname.startsWith('/shares/new/');
 
   // Close the user menu on outside click or Escape.
   useEffect(() => {

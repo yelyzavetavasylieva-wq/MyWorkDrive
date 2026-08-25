@@ -2,7 +2,10 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './layout/AppShell.jsx';
 import SharesPage from './pages/SharesPage.jsx';
-import AddSharePage from './pages/AddSharePage.jsx';
+import AddSharePage, {
+  StorageTypeStep, StorageSettingsStep, ShareDetailsStep,
+  FeaturesStep, UsersStep, ReviewStep,
+} from './pages/AddSharePage.jsx';
 import Placeholder from './pages/Placeholder.jsx';
 import { SharesProvider } from './store/SharesContext.jsx';
 
@@ -25,7 +28,14 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route index element={<Navigate to="/shares" replace />} />
           <Route path="/shares" element={<SharesPage />} />
-          <Route path="/shares/new" element={<AddSharePage />} />
+          <Route path="/shares/new" element={<AddSharePage />}>
+            <Route index element={<StorageTypeStep />} />
+            <Route path="storage" element={<StorageSettingsStep />} />
+            <Route path="details" element={<ShareDetailsStep />} />
+            <Route path="features" element={<FeaturesStep />} />
+            <Route path="users" element={<UsersStep />} />
+            <Route path="review" element={<ReviewStep />} />
+          </Route>
           {PLACEHOLDERS.map((p) => (
             <Route key={p.path} path={`/${p.path}`} element={<Placeholder title={p.title} subtitle={p.subtitle} />} />
           ))}
