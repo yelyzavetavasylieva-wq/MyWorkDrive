@@ -22,8 +22,12 @@ standalone project, unrelated to any other prototype in this account.
   status/feature/storage iconography, truncation with "More", pagination.
 - Search filter and the "Enable drive letter assignment" toggle, which reveals
   the Drive Letter column exactly as the toggle's description states.
-- **Add new share** — a full 6-step wizard at `/shares/new` (route replaces the
-  main content, per the design):
+- **Add new share** — a full 6-step wizard (route replaces the main content, per
+  the design). Each step has its own URL for usability testing:
+  `/shares/new` (Storage type), `/shares/new/storage` (Storage settings),
+  `/shares/new/details`, `/shares/new/features`, `/shares/new/users`,
+  `/shares/new/review`. Wizard state is held by the layout so it persists across
+  step navigation.
   1. Storage type — accordion of provider categories (SMB, OneDrive, SharePoint,
      Azure Blob, Azure Files, S3) with radio selection.
   2. Storage settings — required Path field.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useOutletContext, useLocation, useNavigate } from 'react-router-dom';
 import Stepper from './addshare/Stepper.jsx';
 import StepStorageType from './addshare/StepStorageType.jsx';
 import StepStorageSettings from './addshare/StepStorageSettings.jsx';
@@ -10,7 +10,23 @@ import StepReview from './addshare/StepReview.jsx';
 import { findProvider, settingsComplete, validateSettings } from '../data/wizard.js';
 import { useShares } from '../store/SharesContext.jsx';
 
-const LAST = 5;
+// Each wizard step has its own URL so Maze can track it as a distinct screen.
+// The step index (used by the Stepper and gating logic) is derived from the path.
+const STEP_PATHS = [
+  '/shares/new',          // 0 — Storage Type
+  '/shares/new/storage',  // 1 — Storage Settings
+  '/shares/new/details',  // 2 — Share Details
+  '/shares/new/features', // 3 — Features
+  '/shares/new/users',    // 4 — Users & Groups
+  '/shares/new/review',   // 5 — Review & Confirm
+];
+const LAST = STEP_PATHS.length - 1;
+
+const stepFromPath = (pathname) => {
+  const clean = pathname.replace(/\/+$/, '') || '/shares/new';
+  const i = STEP_PATHS.indexOf(clean);
+  return i === -1 ? 0 : i;
+};
 
 function toShare(state) {
   const provider = findProvider(state.provider);
@@ -36,9 +52,11 @@ function toShare(state) {
 
 export default function AddSharePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { addShare } = useShares();
 
-  const [step, setStep] = useState(0);
+  const step = stepFromPath(location.pathname);
+
   const [provider, setProvider] = useState(null);
   const [settings, setSettings] = useState({});
   const [settingsErrors, setSettingsErrors] = useState({});
@@ -70,19 +88,27 @@ export default function AddSharePage() {
     if (settingsErrors[key]) setSettingsErrors((e) => { const next = { ...e }; delete next[key]; return next; });
   };
 
+  const goToStep = (i) => navigate(STEP_PATHS[Math.max(0, Math.min(LAST, i))]);
+
   const goNext = () => {
     if (step === 1) {
       const errs = validateSettings(provider, settings);
       if (Object.keys(errs).length) { setSettingsErrors(errs); return; }
     }
     setSettingsErrors({});
-    setStep((s) => Math.min(LAST, s + 1));
+    goToStep(step + 1);
   };
-  const goBack = () => setStep((s) => Math.max(0, s - 1));
+  const goBack = () => goToStep(step - 1);
 
   const confirm = () => {
     addShare(toShare({ provider, settings, name, driveLetter, features, users }));
     navigate('/shares', { state: { toast: `“${name.trim()}” created successfully.` } });
+  };
+
+  const ctx = {
+    provider, settings, settingsErrors, name, driveLetter, features, users,
+    changeProvider, changeSetting, setName, setDriveLetter, setFeatures, setUsers,
+    goToStep,
   };
 
   return (
@@ -95,15 +121,10 @@ export default function AddSharePage() {
 
       <h1 className="t-display-xs-semibold wizard__title">Add new share</h1>
 
-      <Stepper current={step} onStepClick={(i) => setStep(i)} />
+      <Stepper current={step} onStepClick={goToStep} />
 
       <div className="wizard__body">
-        {step === 0 && <StepStorageType value={provider} onChange={changeProvider} />}
-        {step === 1 && <StepStorageSettings provider={provider} settings={settings} onChange={changeSetting} errors={settingsErrors} />}
-        {step === 2 && <StepShareDetails name={name} onName={setName} driveLetter={driveLetter} onDriveLetter={setDriveLetter} />}
-        {step === 3 && <StepFeatures features={features} onToggle={(k, v) => setFeatures((f) => ({ ...f, [k]: v }))} />}
-        {step === 4 && <StepUsers rows={users} setRows={setUsers} />}
-        {step === 5 && <StepReview state={{ provider, settings, name, driveLetter, features, users }} onEdit={(i) => setStep(i)} />}
+        <Outlet context={ctx} />
       </div>
 
       <div className="wizard__footer">
@@ -119,4 +140,36 @@ export default function AddSharePage() {
       </div>
     </div>
   );
+}
+
+// Step route components — each reads shared wizard state from the layout's Outlet
+// context and renders the same step body/props as before, unchanged.
+export function StorageTypeStep() {
+  const { provider, changeProvider } = useOutletContext();
+  return <StepStorageType value={provider} onChange={changeProvider} />;
+}
+
+export function StorageSettingsStep() {
+  const { provider, settings, changeSetting, settingsErrors } = useOutletContext();
+  return <StepStorageSettings provider={provider} settings={settings} onChange={changeSetting} errors={settingsErrors} />;
+}
+
+export function ShareDetailsStep() {
+  const { name, setName, driveLetter, setDriveLetter } = useOutletContext();
+  return <StepShareDetails name={name} onName={setName} driveLetter={driveLetter} onDriveLetter={setDriveLetter} />;
+}
+
+export function FeaturesStep() {
+  const { features, setFeatures } = useOutletContext();
+  return <StepFeatures features={features} onToggle={(k, v) => setFeatures((f) => ({ ...f, [k]: v }))} />;
+}
+
+export function UsersStep() {
+  const { users, setUsers } = useOutletContext();
+  return <StepUsers rows={users} setRows={setUsers} />;
+}
+
+export function ReviewStep() {
+  const { provider, settings, name, driveLetter, features, users, goToStep } = useOutletContext();
+  return <StepReview state={{ provider, settings, name, driveLetter, features, users }} onEdit={(i) => goToStep(i)} />;
 }

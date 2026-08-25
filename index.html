@@ -11,6 +11,28 @@
       rel="stylesheet"
     />
     <title>MyWorkDrive Admin</title>
+
+    <!--
+      Maze universal snippet — loads once for the whole single-page app, so it
+      tracks every screen in the test (including the distinct wizard URLs).
+      Replace MAZE_API_KEY below with the API key from your Maze project
+      (Maze → project → Settings → "Website element" / snippet).
+    -->
+    <script>
+      (function (m, a, z, e) {
+        var s, t;
+        try { t = m.sessionStorage.getItem('maze-us'); } catch (err) {}
+        if (!t) {
+          t = new Date().getTime();
+          try { m.sessionStorage.setItem('maze-us', t); } catch (err) {}
+        }
+        s = a.createElement('script');
+        s.src = z + '?apiKey=' + e;
+        s.async = true;
+        a.getElementsByTagName('head')[0].appendChild(s);
+        m.mazeUniversalSnippetApiKey = e;
+      })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', 'MAZE_API_KEY');
+    </script>
   </head>
   <body>
     <div id="root"></div>
