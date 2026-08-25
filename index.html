@@ -15,23 +15,34 @@
     <!--
       Maze universal snippet — loads once for the whole single-page app, so it
       tracks every screen in the test (including the distinct wizard URLs).
-      Replace MAZE_API_KEY below with the API key from your Maze project
-      (Maze → project → Settings → "Website element" / snippet).
     -->
     <script>
       (function (m, a, z, e) {
-        var s, t;
-        try { t = m.sessionStorage.getItem('maze-us'); } catch (err) {}
+        var s, t, u, v;
+        try {
+          t = m.sessionStorage.getItem('maze-us');
+        } catch (err) {}
+
         if (!t) {
           t = new Date().getTime();
-          try { m.sessionStorage.setItem('maze-us', t); } catch (err) {}
+          try {
+            m.sessionStorage.setItem('maze-us', t);
+          } catch (err) {}
         }
+
+        u = document.currentScript || (function () {
+          var w = document.getElementsByTagName('script');
+          return w[w.length - 1];
+        })();
+        v = u && u.nonce;
+
         s = a.createElement('script');
         s.src = z + '?apiKey=' + e;
         s.async = true;
+        if (v) s.setAttribute('nonce', v);
         a.getElementsByTagName('head')[0].appendChild(s);
         m.mazeUniversalSnippetApiKey = e;
-      })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', 'MAZE_API_KEY');
+      })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '5a874003-6fc2-4fc9-84ea-7a0cb2087b8c');
     </script>
   </head>
   <body>
