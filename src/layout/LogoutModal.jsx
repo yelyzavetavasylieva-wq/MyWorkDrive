@@ -43,10 +43,10 @@ export default function LogoutModal({ open, onCancel, onConfirm }) {
 
         <div className="modal__actions">
           <button ref={cancelRef} type="button" className="btn btn--secondary btn--block" onClick={onCancel}>
-            Cancel
+            <span className="btn__label">Cancel</span>
           </button>
           <button type="button" className="btn btn--destructive btn--block" onClick={onConfirm}>
-            Log out
+            <span className="btn__label">Log out</span>
           </button>
         </div>
       </div>

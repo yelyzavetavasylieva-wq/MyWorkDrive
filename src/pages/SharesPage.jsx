@@ -144,7 +144,7 @@ export default function SharesPage() {
           </p>
         </div>
         <div className="page-header__actions">
-          <button type="button" className="btn btn--primary" onClick={() => navigate('/shares/new')}>Add new share</button>
+          <button type="button" className="btn btn--primary" onClick={() => navigate('/shares/new')}><span className="btn__label">Add new share</span></button>
         </div>
       </header>
 
@@ -181,7 +181,7 @@ export default function SharesPage() {
           </div>
           {selectedCount > 0 && (
             <button type="button" className="btn btn--destructive-secondary" onClick={() => setDeleteOpen(true)}>
-              <span className="icon-box icon-20"><IconTrash /></span>Delete
+              <span className="icon-box icon-20"><IconTrash /></span><span className="btn__label">Delete</span>
             </button>
           )}
         </div>
@@ -292,7 +292,7 @@ export default function SharesPage() {
                         {query ? `No shares match “${query}”.` : 'Add your first share to make files available to users.'}
                       </p>
                       {!query && (
-                        <button type="button" className="btn btn--secondary" onClick={() => navigate('/shares/new')}>Add new share</button>
+                        <button type="button" className="btn btn--secondary" onClick={() => navigate('/shares/new')}><span className="btn__label">Add new share</span></button>
                       )}
                     </div>
                   </td>

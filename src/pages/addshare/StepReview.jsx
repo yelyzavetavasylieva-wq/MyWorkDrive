@@ -13,7 +13,7 @@ function Section({ index, title, onEdit, children }) {
       <header className="review-card__head">
         <h3 className="t-md-semibold">{index}. {title}</h3>
         <button type="button" className="btn btn--secondary btn--sm" onClick={onEdit}>
-          <span className="icon-box icon-16"><IconEdit /></span>Edit
+          <span className="icon-box icon-16"><IconEdit /></span><span className="btn__label">Edit</span>
         </button>
       </header>
       {children}

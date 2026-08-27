@@ -28,8 +28,8 @@ export default function LeaveWizardModal({ open, targetLabel, onStay, onLeave })
           </button>
         </div>
         <div className="modal__actions">
-          <button type="button" className="btn btn--secondary btn--block" onClick={onStay}>Back to wizard</button>
-          <button type="button" className="btn btn--primary btn--block" onClick={onLeave}>Discard and leave</button>
+          <button type="button" className="btn btn--secondary btn--block" onClick={onStay}><span className="btn__label">Back to wizard</span></button>
+          <button type="button" className="btn btn--primary btn--block" onClick={onLeave}><span className="btn__label">Discard and leave</span></button>
         </div>
       </div>
     </div>

@@ -49,8 +49,8 @@ export default function StepUsers({ rows, setRows }) {
           <input className="field__input t-md-regular" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search assigned" disabled={rows.length === 0} />
         </div>
         <div className="ug-toolbar__actions">
-          <button type="button" className="btn btn--secondary"><span className="icon-box icon-20"><IconImport /></span>Import</button>
-          <button type="button" className="btn btn--primary" onClick={() => setModalOpen(true)}><span className="icon-box icon-20"><IconPlus /></span>Add Users &amp; Groups</button>
+          <button type="button" className="btn btn--secondary"><span className="icon-box icon-20"><IconImport /></span><span className="btn__label">Import</span></button>
+          <button type="button" className="btn btn--primary" onClick={() => setModalOpen(true)}><span className="icon-box icon-20"><IconPlus /></span><span className="btn__label">Add Users &amp; Groups</span></button>
         </div>
       </div>
 

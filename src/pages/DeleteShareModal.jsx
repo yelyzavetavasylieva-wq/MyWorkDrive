@@ -49,10 +49,10 @@ export default function DeleteShareModal({ open, count, name, onCancel, onConfir
 
         <div className="modal__actions">
           <button ref={cancelRef} type="button" className="btn btn--secondary btn--block" onClick={onCancel}>
-            Cancel
+            <span className="btn__label">Cancel</span>
           </button>
           <button type="button" className="btn btn--destructive btn--block" onClick={onConfirm}>
-            Delete
+            <span className="btn__label">Delete</span>
           </button>
         </div>
       </div>

@@ -15,16 +15,191 @@
   border: 1px solid transparent; box-shadow: var(--shadow-xs);
   height: 40px; padding: 0 14px; white-space: nowrap;
 }
+/* Text label sits in its own wrapper with spacing-xxs (2px) horizontal padding.
+   This is distinct from the .btn flex `gap` (spacing-xs, 4px) between the icon
+   and the label — two separate tokens for two separate purposes. Leading and
+   trailing icons are `.icon-box` spans placed before/after this label. */
+.btn__label { padding: 0 var(--spacing-xxs); }
 .btn--primary { background: var(--bg-brand-solid); color: var(--text-white); border-color: var(--border-tertiary); }
-.btn--primary:hover { background: #2f7ff0; }
+.btn--primary:hover, .btn--primary.is-hover { background: #2f7ff0; }
 .btn--secondary { background: var(--bg-primary); color: var(--text-secondary); border-color: var(--border-primary-2); }
-.btn--secondary:hover { background: var(--bg-active); }
+.btn--secondary:hover, .btn--secondary.is-hover { background: var(--bg-active); }
 .btn--destructive { background: var(--bg-error-solid); color: var(--text-white); border-color: var(--border-tertiary); }
-.btn--destructive:hover { background: #c02618; }
+.btn--destructive:hover, .btn--destructive.is-hover { background: #c02618; }
 /* Destructive secondary: white surface with red text, border, and icon */
 .btn--destructive-secondary { background: var(--bg-primary); color: var(--fg-error); border-color: #fda29b; }
-.btn--destructive-secondary:hover { background: var(--bg-error-secondary); }
+.btn--destructive-secondary:hover, .btn--destructive-secondary.is-hover { background: var(--bg-error-secondary); }
 .btn--block { flex: 1 1 0; }
+
+/* --- Sizes (md = base .btn 40px; .btn--sm lives in wizard.css) --- */
+.btn--lg { height: 44px; padding: 0 18px; font-size: 16px; line-height: 24px; }
+.btn--xl { height: 48px; padding: 0 22px; font-size: 18px; line-height: 28px; }
+
+/* --- Tertiary: text button, no fill or border --- */
+.btn--tertiary { background: transparent; color: var(--text-secondary); border-color: transparent; box-shadow: none; }
+.btn--tertiary:not(:disabled):hover, .btn--tertiary.is-hover { background: var(--bg-active); color: var(--text-secondary-hover); }
+.btn--destructive-tertiary { background: transparent; color: var(--fg-error); border-color: transparent; box-shadow: none; }
+.btn--destructive-tertiary:not(:disabled):hover, .btn--destructive-tertiary.is-hover { background: var(--bg-error-secondary); }
+
+/* --- Link buttons: inline text; no fill, border, height, padding, or shadow.
+   `.btn.` prefix raises specificity so padding/height beat size classes like
+   .btn--sm regardless of stylesheet load order. --- */
+.btn.btn--link-brand, .btn.btn--link-gray, .btn.btn--destructive-link {
+  background: transparent; border-color: transparent; box-shadow: none;
+  height: auto; padding: 0; border-radius: 0;
+}
+.btn--link-brand { color: var(--text-brand-link); }
+.btn--link-brand:not(:disabled):hover, .btn--link-brand.is-hover { text-decoration: underline; color: var(--brand-800); }
+.btn--link-gray { color: var(--text-tertiary); }
+.btn--link-gray:not(:disabled):hover, .btn--link-gray.is-hover { text-decoration: underline; color: var(--text-secondary-hover); }
+.btn--destructive-link { color: var(--fg-error); }
+.btn--destructive-link:not(:disabled):hover, .btn--destructive-link.is-hover { text-decoration: underline; color: var(--error-800); }
+
+/* --- Icon-only: square footprint --- */
+.btn--icon { padding: 0; width: 40px; }
+.btn--sm.btn--icon { width: 36px; height: 36px; }
+.btn--lg.btn--icon { width: 44px; }
+.btn--xl.btn--icon { width: 48px; }
+.btn--link-brand.btn--icon, .btn--link-gray.btn--icon, .btn--destructive-link.btn--icon { width: auto; }
+
+/* --- Focused: EXPLICIT per-hierarchy (ring behavior differs by hierarchy) ---
+   real :focus-visible + .is-focused demo modifier. */
+.btn:focus-visible { outline: none; }
+
+/* Primary — brand focus ring (bg/border unchanged). */
+.btn--primary:focus-visible, .btn--primary.is-focused {
+  box-shadow: 0 0 0 4px rgba(51, 136, 255, 0.24);
+}
+
+/* Secondary (non-destructive) — white bg unchanged, border switches to
+   border-brand (#76afff = --brand-300), plus the brand ring. */
+.btn--secondary:focus-visible, .btn--secondary.is-focused {
+  border-color: var(--brand-300);
+  box-shadow: 0 0 0 4px rgba(51, 136, 255, 0.24);
+}
+
+/* Destructive secondary — Figma ring-error-shadow-xs: error ring (#F04438 @ 24%,
+   spread 4) composed with shadow-xs. Border stays the default error border. */
+.btn--destructive-secondary:focus-visible, .btn--destructive-secondary.is-focused {
+  box-shadow: 0 0 0 4px rgba(240, 68, 56, 0.24), var(--shadow-xs);
+}
+
+/* Destructive primary — error focus ring (color aligned to the confirmed
+   ring-error #F04438; whether primary also composes shadow-xs is unconfirmed). */
+.btn--destructive:focus-visible, .btn--destructive.is-focused {
+  box-shadow: 0 0 0 4px rgba(240, 68, 56, 0.24);
+}
+
+/* Tertiary / Link brand / Link gray (and their destructive counterparts) —
+   Focused renders identically to Hover: no ring, no border/background change
+   beyond the hover styling. */
+.btn--tertiary:focus-visible, .btn--tertiary.is-focused {
+  background: var(--bg-active); color: var(--text-secondary-hover); box-shadow: none;
+}
+.btn--destructive-tertiary:focus-visible, .btn--destructive-tertiary.is-focused {
+  background: var(--bg-error-secondary); box-shadow: none;
+}
+.btn--link-brand:focus-visible, .btn--link-brand.is-focused {
+  text-decoration: underline; color: var(--brand-800); box-shadow: none;
+}
+.btn--link-gray:focus-visible, .btn--link-gray.is-focused {
+  text-decoration: underline; color: var(--text-secondary-hover); box-shadow: none;
+}
+.btn--destructive-link:focus-visible, .btn--destructive-link.is-focused {
+  text-decoration: underline; color: var(--error-800); box-shadow: none;
+}
+
+/* --- Disabled: native :disabled + .is-disabled demo (Figma disabled tokens) --- */
+.btn:disabled, .btn.is-disabled { cursor: not-allowed; box-shadow: none; text-decoration: none; color: var(--gray-400); }
+.btn--primary:disabled, .btn--primary.is-disabled,
+.btn--destructive:disabled, .btn--destructive.is-disabled {
+  background: var(--gray-100); border-color: var(--gray-300); color: var(--gray-400);
+}
+.btn--secondary:disabled, .btn--secondary.is-disabled,
+.btn--destructive-secondary:disabled, .btn--destructive-secondary.is-disabled {
+  background: var(--bg-primary); border-color: var(--gray-300); color: var(--gray-400);
+}
+.btn--tertiary:disabled, .btn--tertiary.is-disabled,
+.btn--link-brand:disabled, .btn--link-brand.is-disabled,
+.btn--link-gray:disabled, .btn--link-gray.is-disabled,
+.btn--destructive-tertiary:disabled, .btn--destructive-tertiary.is-disabled,
+.btn--destructive-link:disabled, .btn--destructive-link.is-disabled {
+  background: transparent; border-color: transparent; color: var(--gray-400);
+}
+
+/* ============================ Inputs ============================ */
+/* Faithful to Figma "Input field" (sm size). NOTE: the app's existing wizard /
+   search fields (.text-input, .field, .select) predate this and DRIFT from the
+   sm spec (radius-md not sm, fixed 40px, focus ring 0.18/3px + brand-200, error
+   border #d92d20) — see the Foundations/Inputs Storybook notes. This is the
+   design-system reference. Placeholder uses --gray-500 (#70707b) because the
+   --text-placeholder token itself drifts (#667085 vs Figma #70707b). */
+.input-field { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.input-field__label { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--text-secondary); }
+.input-field__hint { font-size: 14px; line-height: 20px; color: var(--gray-600); }
+.input-field--error .input-field__hint { color: var(--fg-error); }
+
+.input {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  width: 100%; box-sizing: border-box;
+  background: var(--bg-primary); color: var(--text-primary-2);
+  border: 1px solid var(--border-primary-2); border-radius: var(--radius-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  box-shadow: var(--shadow-xs);
+}
+.input__control {
+  flex: 1 1 0; min-width: 0; border: none; outline: none; background: transparent;
+  color: inherit; font-family: inherit; font-size: 16px; line-height: 24px; padding: 0;
+}
+.input__control::placeholder { color: var(--gray-500); }
+.input__icon { flex: 0 0 auto; display: inline-flex; color: var(--fg-quaternary); }
+.input__help { flex: 0 0 auto; display: inline-flex; color: var(--fg-quinary); }
+
+/* Focused (non-destructive): brand border + ring-brand (same effect as the
+   Secondary button's focused state). */
+.input.is-focused, .input:focus-within {
+  border-color: var(--brand-300);
+  box-shadow: 0 0 0 4px rgba(51, 136, 255, 0.24);
+}
+/* Disabled */
+.input.is-disabled { background: var(--gray-50); color: var(--gray-400); box-shadow: none; cursor: not-allowed; }
+.input.is-disabled .input__control,
+.input.is-disabled .input__control::placeholder { color: var(--gray-400); }
+
+/* Destructive: error border persists across every state (rest/placeholder/
+   filled/disabled), not only focus. */
+.input--error { border-color: var(--error-300); }
+.input--error.is-focused, .input--error:focus-within {
+  border-color: var(--error-300);
+  box-shadow: 0 0 0 4px rgba(240, 68, 56, 0.24);
+}
+
+/* Compound (fused-border) groups: an addon shares the field's border, only the
+   outer corners rounded. Segments are the same height via align-items: stretch. */
+.input-group { display: flex; align-items: stretch; width: 100%; }
+.input-group--leading .input { border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.input-group--trailing .input { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.input-addon {
+  display: inline-flex; align-items: center; gap: var(--spacing-xs); white-space: nowrap;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--bg-primary); color: var(--text-secondary);
+  border: 1px solid var(--border-primary-2); box-shadow: var(--shadow-xs);
+  font-size: 16px; line-height: 24px; cursor: pointer;
+}
+.input-group--leading .input-addon { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.input-group--trailing .input-addon { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.input-addon--text { color: var(--gray-500); cursor: default; } /* e.g. http:// */
+.input-addon__chevron { display: inline-flex; color: var(--fg-quaternary); }
+/* Trailing Button reused as-is, fused to the field's right edge. */
+.input-group--trailing .btn { align-self: stretch; height: auto; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+/* Compound focus/error: ring wraps the whole group; segment borders recolor. */
+.input-group.is-focused { border-radius: var(--radius-sm); box-shadow: 0 0 0 4px rgba(51, 136, 255, 0.24); }
+.input-group.is-focused .input, .input-group.is-focused .input-addon, .input-group.is-focused .btn { border-color: var(--brand-300); }
+.input-group--error .input, .input-group--error .input-addon { border-color: var(--error-300); }
+.input-group--error.is-focused { box-shadow: 0 0 0 4px rgba(240, 68, 56, 0.24); }
+.input-group--error.is-focused .input, .input-group--error.is-focused .input-addon { border-color: var(--error-300); }
+.input-group.is-disabled .input, .input-group.is-disabled .input-addon { background: var(--gray-50); color: var(--gray-400); box-shadow: none; }
 
 /* ============================ Toggle card ============================ */
 .toggle-card {
@@ -152,7 +327,8 @@
 /* Assigned Users & Groups modal (opened from the "More" link) — fixed 480x768 */
 .modal--assigned { position: relative; max-width: 480px; height: 768px; max-height: calc(100vh - 48px); display: flex; flex-direction: column; }
 .assigned-modal__header {
-  position: relative;
+  /* Not a positioning context — .modal__close pins to the .modal--assigned
+     container (which is position: relative), matching the small modal. */
   display: flex; align-items: flex-start; justify-content: space-between;
   padding: 20px 24px; border-bottom: 1px solid var(--border-secondary); flex-shrink: 0;
 }
@@ -180,6 +356,37 @@
 .toast__text { flex: 1 1 0; color: var(--text-secondary); }
 .toast__close { background: none; border: none; cursor: pointer; color: var(--fg-quaternary); display: flex; padding: 2px; border-radius: var(--radius-xs); }
 .toast__close:hover { color: var(--fg-secondary); }
+
+/* ---------------------------- Alert (card) ----------------------------
+   Figma "Alert" (node 2190-105778): rounded-xl card, 1px border-primary,
+   shadow-xs, per-state tinted background + icon. Distinct from the pill .toast
+   above (which the app still uses for share create/delete confirmations). */
+.alert {
+  display: flex; align-items: flex-start; gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xs);
+}
+.alert__icon { flex: 0 0 auto; display: inline-flex; }
+/* Figma text-secondary here is #3f3f46 (= --gray-700 / --fg-secondary); the
+   semantic --text-secondary token drifts to #344054, so use the exact primitive. */
+.alert__text { flex: 1 1 0; min-width: 0; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--gray-700); }
+.alert__action { flex: 0 0 auto; display: inline-flex; }
+.alert__close {
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer; padding: 0; color: var(--fg-quinary);
+}
+.alert__close:hover { color: var(--fg-secondary); }
+
+.alert--success { background: var(--success-50); }
+.alert--success .alert__icon { color: var(--success-600); }
+.alert--warning { background: var(--warning-50); }
+.alert--warning .alert__icon { color: var(--fg-warning); }
+.alert--info { background: var(--brand-50); }
+.alert--info .alert__icon { color: var(--brand-700); }
+.alert--error { background: var(--error-50); }
+.alert--error .alert__icon { color: var(--fg-error); }
 
 .row--selected .td { background: var(--bg-active); }
 .data-table tbody tr:hover .td { background: var(--bg-secondary); }
@@ -230,10 +437,13 @@
   display: flex; align-items: center; justify-content: center; padding: var(--spacing-4xl);
 }
 .modal {
+  position: relative;
   background: var(--bg-primary); width: 100%; max-width: 400px;
   border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); overflow: hidden;
 }
-.modal__header { position: relative; }
+/* Note: .modal__header is deliberately NOT a positioning context — the close
+   button (.modal__close) pins to the .modal container so its top/right offset
+   stays constant regardless of how tall the header title/description grow. */
 .modal__content { display: flex; flex-direction: column; gap: var(--spacing-xl); align-items: flex-start; padding: 24px 24px 0; }
 .featured-icon { width: 48px; height: 48px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .featured-icon--error { background: var(--bg-error-secondary); color: var(--fg-error); }
@@ -270,6 +480,39 @@
 .tabs--vertical .tab { text-align: left; padding: var(--spacing-md) var(--spacing-lg); margin: 0 0 0 -1px; border-bottom: none; border-left: 2px solid transparent; }
 .tabs--vertical .tab + .tab { margin-left: -1px; }
 .tabs--vertical .tab--active { border-left-color: var(--fg-brand); }
+
+/* ---------------------------- Tabs (segmented control) ----------------------------
+   Figma "Tabs" / "TabButtonBase" (nodes 1030-50669 / 1030-50008). Distinct from
+   the underline .tabs above. Rendered by the <Tabs> React component (src/ui/Tabs.jsx). */
+.seg-tabs {
+  display: flex; align-items: stretch; gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-xl);
+}
+.seg-tabs__tab {
+  flex: 1 0 0; min-width: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 var(--spacing-lg);
+  appearance: none; border: none; background: transparent; cursor: pointer;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans); font-weight: 600;
+  color: var(--text-tertiary-2); white-space: nowrap;
+}
+.seg-tabs--sm .seg-tabs__tab { height: 36px; font-size: 14px; line-height: 20px; }
+.seg-tabs--md .seg-tabs__tab { height: 44px; font-size: 16px; line-height: 24px; }
+/* Hover, Current, and Focus all sit on the white raised surface with dark text.
+   .is-hover / .is-focus are static demo modifiers mirroring the pseudo-states. */
+.seg-tabs__tab:not(:disabled):hover, .seg-tabs__tab.is-hover,
+.seg-tabs__tab.is-selected {
+  background: var(--bg-primary); box-shadow: var(--shadow-sm); color: var(--text-primary-2);
+}
+.seg-tabs__tab:focus-visible, .seg-tabs__tab.is-focus {
+  outline: none; background: var(--bg-primary); color: var(--text-primary-2);
+  box-shadow: var(--shadow-sm), 0 0 0 4px rgba(152, 162, 179, 0.14);
+}
+.seg-tabs__tab:disabled { cursor: not-allowed; color: var(--gray-400); }
 
 /* ---------------------------- Progress bar ---------------------------- */
 .progress-bar { display: flex; align-items: center; gap: var(--spacing-lg); }

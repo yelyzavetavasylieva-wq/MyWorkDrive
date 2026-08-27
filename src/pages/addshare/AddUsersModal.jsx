@@ -104,9 +104,9 @@ export default function AddUsersModal({ open, onClose, initialIds, onConfirm }) 
         </div>
 
         <div className="modal--wide__footer">
-          <button type="button" className="btn btn--secondary" onClick={onClose}>Cancel</button>
+          <button type="button" className="btn btn--secondary" onClick={onClose}><span className="btn__label">Cancel</span></button>
           <button type="button" className="btn btn--primary" disabled={assignedItems.length === 0} onClick={() => onConfirm([...assigned])}>
-            Confirm
+            <span className="btn__label">Confirm</span>
           </button>
         </div>
       </div>

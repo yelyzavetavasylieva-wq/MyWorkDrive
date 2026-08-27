@@ -129,13 +129,13 @@ export default function AddSharePage() {
 
       <div className="wizard__footer">
         {step > 0 ? (
-          <button type="button" className="btn btn--secondary" onClick={goBack}>Back</button>
+          <button type="button" className="btn btn--secondary" onClick={goBack}><span className="btn__label">Back</span></button>
         ) : <span />}
 
         {step < LAST ? (
-          <button type="button" className="btn btn--primary" disabled={!canNext} onClick={goNext}>Next</button>
+          <button type="button" className="btn btn--primary" disabled={!canNext} onClick={goNext}><span className="btn__label">Next</span></button>
         ) : (
-          <button type="button" className="btn btn--primary" onClick={confirm}>Confirm &amp; create</button>
+          <button type="button" className="btn btn--primary" onClick={confirm}><span className="btn__label">Confirm &amp; create</span></button>
         )}
       </div>
     </div>

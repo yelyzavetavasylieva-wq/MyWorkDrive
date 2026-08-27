@@ -36,3 +36,27 @@ export const Logout = {
     );
   },
 };
+
+// Regression guard for the close button: `.modal__close` is pinned to the
+// `.modal` container (position: absolute; top: 16px; right: 16px), so its
+// position is constant regardless of how tall the header content grows. Passing
+// a long `targetLabel` forces the description to wrap onto extra lines — the
+// close button stays fixed in the top-right corner and the text does not reflow
+// around it. See Figma node 523:20483.
+export const PinnedCloseWithTallContent = {
+  name: 'Close button — pinned (tall content)',
+  render: () => {
+    const [open, setOpen] = useState(true);
+    return (
+      <>
+        {!open && <button type="button" className="btn btn--primary" onClick={() => setOpen(true)}>Reopen</button>}
+        <LeaveWizardModal
+          open={open}
+          targetLabel="Settings › Integrations › Single Sign-On › SAML Identity Provider Configuration"
+          onStay={() => setOpen(false)}
+          onLeave={() => setOpen(false)}
+        />
+      </>
+    );
+  },
+};
